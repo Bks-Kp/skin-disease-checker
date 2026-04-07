@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Skin Checker</title>
+</head>
+<body>
+
+<h2>AI Skin Checker</h2>
+
+<input type="file" id="image"><br><br>
+<input type="text" id="name" placeholder="Name"><br><br>
+<input type="number" id="age" placeholder="Age"><br><br>
+
+<select id="gender">
+  <option>Male</option>
+  <option>Female</option>
+</select><br><br>
+
+<input type="text" id="duration" placeholder="Since when"><br><br>
+<textarea id="symptoms" placeholder="Symptoms"></textarea><br><br>
+<input type="text" id="area" placeholder="Affected area"><br><br>
+<textarea id="medication" placeholder="Medication"></textarea><br><br>
+
+<button onclick="analyze()">Analyze</button>
+
+<pre id="result"></pre>
+
+<script>
+async function analyze() {
+  const file = document.getElementById("image").files[0];
+  const result = document.getElementById("result");
+
+  if (!file) {
+    result.innerText = "Upload image";
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = async function () {
+    const base64 = reader.result;
+
+    const res = await fetch("http://localhost:3000/analyze", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        image: base64,
+        formData: {
+          name: name.value,
+          age: age.value,
+          gender: gender.value,
+          duration: duration.value,
+          symptoms: symptoms.value,
+          area: area.value,
+          medication: medication.value
+        }
+      })
+    });
+
+    const data = await res.json();
+    result.innerText = data.choices[0].message.content;
+  };
+
+  reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>
