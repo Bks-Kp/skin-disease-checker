@@ -11,7 +11,7 @@
       padding: 20px;
     }
 
-    input, textarea, button {
+    input, textarea, select, button {
       width: 90%;
       padding: 10px;
       margin: 10px;
@@ -26,16 +26,18 @@
     }
 
     img {
-      margin-top: 10px;
       max-width: 250px;
+      margin-top: 10px;
       border-radius: 10px;
     }
 
-    #result {
+    #prescription {
       margin-top: 20px;
-      background: #0f172a;
-      padding: 15px;
+      background: white;
+      color: black;
+      padding: 20px;
       border-radius: 10px;
+      text-align: left;
       white-space: pre-wrap;
     }
   </style>
@@ -45,18 +47,27 @@
 
 <h2>🧠 Skin Disease Checker</h2>
 
-<input type="file" id="image" accept="image/*"><br>
-<img id="preview" />
+<input type="file" id="image" accept="image/*">
+<img id="preview">
 
-<textarea id="symptoms" placeholder="Enter symptoms (itching, red spots, acne etc)"></textarea>
+<input type="text" id="name" placeholder="Name">
+<input type="number" id="age" placeholder="Age">
 
-<button onclick="analyze()">Analyze</button>
+<select id="gender">
+  <option value="">Select Gender</option>
+  <option>Male</option>
+  <option>Female</option>
+</select>
 
-<div id="result"></div>
+<textarea id="symptoms" placeholder="Enter symptoms"></textarea>
+
+<button onclick="analyze()">Generate Prescription</button>
+
+<div id="prescription"></div>
 
 <script>
 
-// IMAGE PREVIEW
+// Image Preview
 document.getElementById("image").addEventListener("change", function() {
   const file = this.files[0];
   const reader = new FileReader();
@@ -68,77 +79,67 @@ document.getElementById("image").addEventListener("change", function() {
   if (file) reader.readAsDataURL(file);
 });
 
-// ANALYZE FUNCTION
+// Analyze
 function analyze() {
+  const name = document.getElementById("name").value;
+  const age = document.getElementById("age").value;
+  const gender = document.getElementById("gender").value;
   const symptoms = document.getElementById("symptoms").value.toLowerCase();
-  const result = document.getElementById("result");
 
-  let output = "";
+  let disease = "Unknown condition";
+  let advice = "Consult a dermatologist.";
+  let medicine = "N/A";
 
   if (symptoms.includes("itch") || symptoms.includes("rash")) {
-    output = `
-🔍 Possible Condition: Eczema / Allergy
-
-📊 Severity: Medium
-
-💡 Common Info (like Google):
-- Often caused by irritation or allergy
-- Symptoms include itching, redness
-
-🧴 Care Tips:
-- Use moisturizer
-- Avoid harsh soaps
-
-⚠️ Consult a dermatologist
-`;
+    disease = "Eczema / Skin Allergy";
+    advice = "Keep skin moisturized and avoid irritants.";
+    medicine = "Moisturizing cream (OTC)";
   }
 
   else if (symptoms.includes("pimple") || symptoms.includes("acne")) {
-    output = `
-🔍 Possible Condition: Acne
-
-📊 Severity: Low
-
-💡 Common Info:
-- Caused by clogged pores
-- Common in teenagers
-
-🧴 Care Tips:
-- Keep face clean
-- Avoid oily products
-
-⚠️ Consult a dermatologist
-`;
+    disease = "Acne";
+    advice = "Wash face regularly and avoid oily products.";
+    medicine = "Salicylic acid face wash (OTC)";
   }
 
-  else if (symptoms.includes("white") || symptoms.includes("patch")) {
-    output = `
-🔍 Possible Condition: Fungal Infection
-
-📊 Severity: Medium
-
-💡 Common Info:
-- Caused by fungus in moist areas
-
-🧴 Care Tips:
-- Keep skin dry
-- Maintain hygiene
-
-⚠️ Consult a doctor
-`;
+  else if (symptoms.includes("patch") || symptoms.includes("white")) {
+    disease = "Fungal Infection";
+    advice = "Keep area dry and clean.";
+    medicine = "Antifungal cream (OTC)";
   }
 
-  else {
-    output = `
-🤔 Unable to detect clearly
+  const prescription = `
+🧾 DIGITAL PRESCRIPTION
 
-💡 Suggestion:
-- Try adding more symptoms
-- Consult a dermatologist
+Patient Name: ${name}
+Age: ${age}
+Gender: ${gender}
+
+----------------------------------
+
+Possible Condition:
+${disease}
+
+----------------------------------
+
+Recommended Care:
+${advice}
+
+----------------------------------
+
+Suggested OTC Medicine:
+${medicine}
+
+----------------------------------
+
+⚠️ Note:
+This is NOT a medical diagnosis.
+Please consult a qualified doctor.
+
+👨‍⚕️ - AI Health Assistant
 `;
-  }
 
-  result.innerText = output;
+  document.getElementById("prescription").innerText = prescription;
 }
 
 </script>
