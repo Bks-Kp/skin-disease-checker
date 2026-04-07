@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Skin Checker</title>
+  <title>BKS Health Clinic - Skin Checker</title>
   <style>
     body {
       font-family: Arial;
       text-align: center;
-      background: #1e293b;
+      background: #0f172a;
       color: white;
       padding: 20px;
     }
@@ -26,26 +26,56 @@
     }
 
     img {
-      max-width: 250px;
+      max-width: 200px;
       margin-top: 10px;
       border-radius: 10px;
     }
 
-    #prescription {
-      margin-top: 20px;
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
       background: white;
       color: black;
       padding: 20px;
-      border-radius: 10px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
       text-align: left;
-      white-space: pre-wrap;
     }
+
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #000;
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .doctor {
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
   </style>
 </head>
 
 <body>
 
-<h2>🧠 Skin Disease Checker</h2>
+<h2>🧠 B K S Health Clinic</h2>
 
 <input type="file" id="image" accept="image/*">
 <img id="preview">
@@ -63,83 +93,90 @@
 
 <button onclick="analyze()">Generate Prescription</button>
 
-<div id="prescription"></div>
+<!-- Modal -->
+<div id="popup" class="modal">
+  <div class="modal-content" id="prescriptionBox">
+
+    <div class="header">
+      <div class="logo">🏥 B K S Health Clinic</div>
+      <div class="doctor">Dr. Bharath K S</div>
+    </div>
+
+    <div id="prescriptionText"></div>
+
+    <button onclick="downloadPDF()">🖨️ Download PDF</button>
+    <button onclick="closePopup()">Close</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
 
-// Image Preview
-document.getElementById("image").addEventListener("change", function() {
+// Preview
+image.addEventListener("change", function() {
   const file = this.files[0];
   const reader = new FileReader();
-
-  reader.onload = function(e) {
-    document.getElementById("preview").src = e.target.result;
-  };
-
-  if (file) reader.readAsDataURL(file);
+  reader.onload = e => preview.src = e.target.result;
+  if(file) reader.readAsDataURL(file);
 });
 
-// Analyze
 function analyze() {
   const name = document.getElementById("name").value;
   const age = document.getElementById("age").value;
   const gender = document.getElementById("gender").value;
   const symptoms = document.getElementById("symptoms").value.toLowerCase();
 
-  let disease = "Unknown condition";
-  let advice = "Consult a dermatologist.";
-  let medicine = "N/A";
+  let disease = "Unknown";
+  let severity = "Low";
+  let cureTime = "3-5 days";
+  let advice = "Consult doctor";
 
-  if (symptoms.includes("itch") || symptoms.includes("rash")) {
-    disease = "Eczema / Skin Allergy";
-    advice = "Keep skin moisturized and avoid irritants.";
-    medicine = "Moisturizing cream (OTC)";
+  if(symptoms.includes("itch") || symptoms.includes("rash")){
+    disease = "Eczema / Allergy";
+    severity = "Medium";
+    cureTime = "1-2 weeks";
+    advice = "Use moisturizer and avoid irritants";
   }
-
-  else if (symptoms.includes("pimple") || symptoms.includes("acne")) {
+  else if(symptoms.includes("acne") || symptoms.includes("pimple")){
     disease = "Acne";
-    advice = "Wash face regularly and avoid oily products.";
-    medicine = "Salicylic acid face wash (OTC)";
+    severity = "Low";
+    cureTime = "1-2 weeks";
+    advice = "Keep skin clean, avoid oil products";
   }
-
-  else if (symptoms.includes("patch") || symptoms.includes("white")) {
+  else if(symptoms.includes("patch") || symptoms.includes("white")){
     disease = "Fungal Infection";
-    advice = "Keep area dry and clean.";
-    medicine = "Antifungal cream (OTC)";
+    severity = "Medium";
+    cureTime = "2-3 weeks";
+    advice = "Keep area dry and clean";
   }
 
-  const prescription = `
-🧾 DIGITAL PRESCRIPTION
+  const text = `
+Patient: ${name}
+Age: ${age} | Gender: ${gender}
 
-Patient Name: ${name}
-Age: ${age}
-Gender: ${gender}
+Condition: ${disease}
+Severity: ${severity}
+Estimated Recovery: ${cureTime}
 
-----------------------------------
-
-Possible Condition:
-${disease}
-
-----------------------------------
-
-Recommended Care:
+Advice:
 ${advice}
 
-----------------------------------
-
-Suggested OTC Medicine:
-${medicine}
-
-----------------------------------
-
-⚠️ Note:
-This is NOT a medical diagnosis.
-Please consult a qualified doctor.
-
-👨‍⚕️ - AI Health Assistant
+⚠️ This is not a medical diagnosis.
+Consult a certified doctor.
 `;
 
-  document.getElementById("prescription").innerText = prescription;
+  document.getElementById("prescriptionText").innerText = text;
+  document.getElementById("popup").style.display = "flex";
+}
+
+function closePopup(){
+  document.getElementById("popup").style.display = "none";
+}
+
+function downloadPDF(){
+  const element = document.getElementById("prescriptionBox");
+  html2pdf().from(element).save("Prescription.pdf");
 }
 
 </script>
