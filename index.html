@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-
 body{
 font-family:'Segoe UI';
 background:linear-gradient(135deg,#0f172a,#1e3a8a);
@@ -27,11 +26,17 @@ padding:20px;
 border-radius:15px;
 }
 
-/* FORM GRID (FIXED) */
+/* FORM */
 .form-grid{
 display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
+grid-template-columns:1fr;
+gap:10px;
+}
+
+.row-3{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:10px;
 }
 
 /* INPUT */
@@ -40,7 +45,6 @@ width:100%;
 padding:12px;
 border-radius:10px;
 border:none;
-height:45px;
 }
 
 /* BUTTON */
@@ -56,7 +60,7 @@ cursor:pointer;
 font-weight:bold;
 }
 
-/* 🔥 PERFECT SYMPTOM GRID */
+/* SYMPTOMS */
 .symptom-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
@@ -67,22 +71,17 @@ gap:10px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:10px 12px;
+padding:10px;
 background:rgba(255,255,255,0.08);
 border-radius:10px;
-height:45px;
-font-size:14px;
-}
-
-.symptom-item input{
-width:18px;
-height:18px;
 }
 
 /* MODAL */
 .modal{
 display:none;
 position:fixed;
+top:0;
+left:0;
 width:100%;
 height:100%;
 background:rgba(0,0,0,0.8);
@@ -101,13 +100,11 @@ max-height:85vh;
 overflow:auto;
 }
 
-/* CARD */
 .card{
 background:#f1f5f9;
-color:black;
 padding:10px;
-margin:10px 0;
 border-radius:10px;
+margin:10px 0;
 }
 
 /* GRAPH */
@@ -119,7 +116,6 @@ border-radius:5px;
 }
 
 .hidden{display:none;}
-
 </style>
 </head>
 
@@ -148,23 +144,25 @@ border-radius:5px;
 
 <div class="form-grid">
 <input id="name" placeholder="👤 Name">
+
+<div class="row-3">
 <input id="age" placeholder="🎂 Age">
+
 <select id="location">
-<option>Body Location</option>
+<option>Location</option>
 <option>Face</option>
 <option>Hands</option>
 <option>Legs</option>
 <option>Feet</option>
-<option>Back</option>
-<option>Full Body</option>
 </select>
 
 <select id="severity">
 <option>Severity</option>
-<option value="low">Mild</option>
-<option value="medium">Moderate</option>
-<option value="high">Severe</option>
+<option value="low">Low</option>
+<option value="medium">Medium</option>
+<option value="high">High</option>
 </select>
+</div>
 </div>
 
 <h3>🩺 Symptoms</h3>
@@ -178,7 +176,6 @@ border-radius:5px;
 <div class="symptom-item">Pus <input type="checkbox" value="pus"></div>
 <div class="symptom-item">Ring Patch <input type="checkbox" value="ring"></div>
 <div class="symptom-item">Scaling <input type="checkbox" value="scaling"></div>
-<div class="symptom-item">Dark Spots <input type="checkbox" value="dark"></div>
 </div>
 
 <button onclick="analyze()">🔍 Analyze</button>
@@ -191,6 +188,7 @@ border-radius:5px;
 <div class="modal-content" id="resultBox">
 <div id="result"></div>
 <button onclick="downloadPDF()">📄 Download PDF</button>
+<button onclick="closePopup()">Close</button>
 </div>
 </div>
 
@@ -200,36 +198,30 @@ border-radius:5px;
 
 /* NAV */
 function showPatient(){
-document.getElementById("home").style.display="none";
-document.getElementById("app").style.display="block";
+home.style.display="none";
+app.style.display="block";
 }
-
 function showDoctor(){
-document.getElementById("home").style.display="none";
-document.getElementById("login").style.display="block";
+home.style.display="none";
+login.style.display="block";
 }
-
 function goHome(){location.reload();}
 
 /* LOGIN */
 function login(){
-let u=document.getElementById("username").value;
-let p=document.getElementById("password").value;
-
-if(u==="doctor" && p==="1234"){
+if(username.value==="doctor" && password.value==="1234"){
+login.style.display="none";
 loadDashboard();
-}else{
-alert("Invalid Login ❌");
-}
+}else alert("Wrong login");
 }
 
-/* ANALYZE (FIXED) */
+/* ANALYZE FIXED */
 function analyze(){
 
 let name=document.getElementById("name").value;
 let age=document.getElementById("age").value;
-let severity=document.getElementById("severity").value;
 let location=document.getElementById("location").value;
+let severity=document.getElementById("severity").value;
 
 let symptoms=[...document.querySelectorAll(".symptom-item input:checked")].map(x=>x.value);
 
@@ -242,20 +234,20 @@ if(symptoms.includes("pimple")) disease="Acne";
 else if(symptoms.includes("ring")) disease="Fungal Infection";
 else if(symptoms.includes("itch")) disease="Eczema";
 
-/* REPORT */
+/* POPUP WORKING */
 document.getElementById("result").innerHTML=`
-<h2 style="text-align:center;">🧾 Diagnosis Report</h2>
+<h2 style="text-align:center;">🧾 Patient Report</h2>
 
-<p>👤 <b>Name:</b> ${name}</p>
-<p>🎂 <b>Age:</b> ${age}</p>
-<p>📍 <b>Location:</b> ${location}</p>
-<p>⚠️ <b>Severity:</b> ${severity}</p>
-<p>🦠 <b>Condition:</b> ${disease}</p>
+<p>👤 <b>${name}</b></p>
+<p>🎂 Age: ${age}</p>
+<p>📍 Location: ${location}</p>
+<p>⚠️ Severity: ${severity}</p>
+<p>🦠 Condition: <b>${disease}</b></p>
 
 <hr>
 
 <p>💊 Advice: Maintain hygiene</p>
-<p>🛡 Precautions: Avoid touching infected area</p>
+<p>🛡 Precautions: Avoid touching area</p>
 <p>⏳ Recovery: 1-2 weeks</p>
 <p>🚨 Doctor: Visit if severe</p>
 `;
@@ -264,11 +256,11 @@ document.getElementById("popup").style.display="flex";
 
 /* SAVE */
 let data=JSON.parse(localStorage.getItem("patients")||"[]");
-data.push({name,age,disease,date:new Date().toLocaleString()});
+data.push({name,age,location,severity,disease,date:new Date().toLocaleString()});
 localStorage.setItem("patients",JSON.stringify(data));
 }
 
-/* DASHBOARD */
+/* DASHBOARD FULL REPORT */
 function loadDashboard(){
 
 let data=JSON.parse(localStorage.getItem("patients")||"[]");
@@ -276,11 +268,23 @@ let data=JSON.parse(localStorage.getItem("patients")||"[]");
 let html="<h2>👨‍⚕️ Doctor Dashboard</h2>";
 
 data.forEach(p=>{
-html+=`<div class="card">${p.name} (${p.age}) - ${p.disease}</div>`;
+html+=`
+<div class="card">
+<b>${p.name}</b> (${p.age})<br>
+📍 ${p.location}<br>
+⚠️ ${p.severity}<br>
+🦠 ${p.disease}<br>
+📅 ${p.date}
+</div>`;
 });
 
 document.getElementById("result").innerHTML=html;
 document.getElementById("popup").style.display="flex";
+}
+
+/* CLOSE */
+function closePopup(){
+popup.style.display="none";
 }
 
 /* PDF */
