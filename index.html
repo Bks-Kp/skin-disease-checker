@@ -2,7 +2,6 @@
 <html>
 <head>
 <title>Kalpana Skin Clinic</title>
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -21,13 +20,14 @@ body {
   max-width:900px;
   margin:auto;
   background:rgba(255,255,255,0.08);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   padding:20px;
   border-radius:15px;
   box-shadow:0 8px 30px rgba(0,0,0,0.5);
+  animation:fadeIn 0.6s;
 }
 
-/* HOME SCREEN */
+/* HOME */
 .home {
   text-align:center;
   margin-top:120px;
@@ -38,130 +38,135 @@ body {
   margin:10px auto;
 }
 
-/* INPUTS */
-input, select {
+/* GRID FORM */
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+@media(max-width:600px){
+  .form-grid{grid-template-columns:1fr;}
+}
+
+/* INPUT */
+input,select{
   width:100%;
   padding:12px;
-  margin:10px 0;
   border-radius:10px;
   border:none;
 }
 
 /* BUTTON */
-button {
+button{
   width:100%;
   padding:12px;
-  margin-top:10px;
   border-radius:10px;
   border:none;
   font-weight:bold;
-  cursor:pointer;
   background:linear-gradient(90deg,#38bdf8,#06b6d4);
   color:white;
+  cursor:pointer;
+  margin-top:10px;
+  transition:0.3s;
 }
+button:hover{transform:scale(1.05);}
 
-/* 🔥 FIXED PRO GRID */
-.symptom-grid {
+/* SYMPTOMS */
+.symptom-grid{
   display:grid;
-  grid-template-columns: repeat(2,1fr);
-  gap:12px;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
 }
-
-.symptom-item {
+.symptom-item{
   display:flex;
   justify-content:space-between;
   align-items:center;
   padding:12px;
-  height:50px; /* FIXED HEIGHT */
+  height:50px;
   background:rgba(255,255,255,0.08);
   border-radius:10px;
 }
 
-.symptom-item input {
-  width:18px;
-  height:18px;
-}
-
-/* MOBILE */
-@media(max-width:600px){
-  .symptom-grid{
-    grid-template-columns:1fr;
-  }
-}
-
 /* MODAL */
-.modal {
+.modal{
   display:none;
   position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
+  width:100%;
+  height:100%;
   background:rgba(0,0,0,0.8);
   justify-content:center;
   align-items:center;
 }
 
-.modal-content {
+.modal-content{
   background:white;
   color:black;
   padding:20px;
   border-radius:12px;
   width:90%;
-  max-width:600px;
+  max-width:650px;
+  max-height:85vh;
+  overflow:auto;
+}
+
+/* DASHBOARD */
+.card{
+  background:#f1f5f9;
+  color:black;
+  padding:10px;
+  margin:10px 0;
+  border-radius:10px;
 }
 
 /* GRAPH */
-.bar {
-  height:10px;
+.bar{
+  height:8px;
   background:#38bdf8;
   margin:5px 0;
   border-radius:5px;
 }
 
-/* LOGIN */
-.login {
-  max-width:400px;
-  margin:auto;
-  margin-top:100px;
-  background:rgba(255,255,255,0.1);
-  padding:20px;
-  border-radius:12px;
+/* ANIMATION */
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;}
 }
 
-.hidden { display:none; }
+.hidden{display:none;}
 
 </style>
 </head>
 
 <body>
 
-<!-- 🏠 HOME SCREEN -->
-<div id="homePage" class="home">
+<!-- HOME -->
+<div id="home" class="home">
 <h2>🏥 Kalpana Skin Clinic</h2>
-<button onclick="goPatient()">👤 Patient</button>
-<button onclick="goDoctor()">👨‍⚕️ Doctor</button>
+<button onclick="showPatient()">👤 Patient</button>
+<button onclick="showDoctor()">👨‍⚕️ Doctor</button>
 </div>
 
 <!-- LOGIN -->
-<div id="loginPage" class="login hidden">
+<div id="login" class="container hidden">
 <h2>👨‍⚕️ Doctor Login</h2>
-
-<input id="username" placeholder="👤 Username">
-<input id="password" type="password" placeholder="🔒 Password">
-
+<input id="username" placeholder="Username">
+<input id="password" type="password" placeholder="Password">
 <button onclick="login()">Login</button>
 <button onclick="goHome()">⬅ Back</button>
 </div>
 
-<!-- APP -->
+<!-- PATIENT -->
 <div id="app" class="container hidden">
 
-<h2 style="text-align:center;">🧠 Kalpana Skin Clinic</h2>
+<h2 style="text-align:center;">🧠 Skin Disease Analyzer</h2>
 
+<div class="form-grid">
 <input id="name" placeholder="👤 Name">
 <input id="age" placeholder="🎂 Age">
 
 <select id="location">
-<option value="">📍 Body Location</option>
+<option>Body Location</option>
 <option>Face</option>
 <option>Hands</option>
 <option>Legs</option>
@@ -171,42 +176,37 @@ button {
 </select>
 
 <select id="severity">
-<option value="">⚠️ Severity</option>
+<option>Severity</option>
 <option value="low">Mild</option>
 <option value="medium">Moderate</option>
 <option value="high">Severe</option>
 </select>
-
-<h3>🩺 Symptoms</h3>
-
-<div class="symptom-grid">
-
-<div class="symptom-item">Itching <input type="checkbox" value="itch"></div>
-<div class="symptom-item">Dry Skin <input type="checkbox" value="dry"></div>
-
-<div class="symptom-item">Redness <input type="checkbox" value="redness"></div>
-<div class="symptom-item">Pimples <input type="checkbox" value="pimple"></div>
-
-<div class="symptom-item">Blackheads <input type="checkbox" value="blackhead"></div>
-<div class="symptom-item">Pus <input type="checkbox" value="pus"></div>
-
-<div class="symptom-item">Ring Patch <input type="checkbox" value="ring"></div>
-<div class="symptom-item">Scaling <input type="checkbox" value="scaling"></div>
-
-<div class="symptom-item">Dark Spots <input type="checkbox" value="dark"></div>
-
 </div>
 
-<button onclick="analyze()">🔍 Analyze</button>
+<h3>Symptoms</h3>
+
+<div class="symptom-grid">
+<div class="symptom-item">Itching <input type="checkbox" value="itch"></div>
+<div class="symptom-item">Dry Skin <input type="checkbox" value="dry"></div>
+<div class="symptom-item">Redness <input type="checkbox" value="redness"></div>
+<div class="symptom-item">Pimples <input type="checkbox" value="pimple"></div>
+<div class="symptom-item">Blackheads <input type="checkbox" value="blackhead"></div>
+<div class="symptom-item">Pus <input type="checkbox" value="pus"></div>
+<div class="symptom-item">Ring Patch <input type="checkbox" value="ring"></div>
+<div class="symptom-item">Scaling <input type="checkbox" value="scaling"></div>
+<div class="symptom-item">Dark Spots <input type="checkbox" value="dark"></div>
+</div>
+
+<button onclick="analyze()">Analyze</button>
 <button onclick="goHome()">⬅ Back</button>
 
 </div>
 
-<!-- RESULT -->
+<!-- POPUP -->
 <div id="popup" class="modal">
-<div class="modal-content" id="report">
+<div class="modal-content" id="resultBox">
 <div id="result"></div>
-<button onclick="downloadPDF()">📄 Download PDF</button>
+<button onclick="downloadPDF()">Download PDF</button>
 <button onclick="closePopup()">Close</button>
 </div>
 </div>
@@ -215,43 +215,35 @@ button {
 
 <script>
 
-/* NAVIGATION */
-function goPatient(){
-document.getElementById("homePage").classList.add("hidden");
-document.getElementById("app").classList.remove("hidden");
+/* NAV */
+function showPatient(){
+home.classList.add("hidden");
+app.classList.remove("hidden");
 }
-
-function goDoctor(){
-document.getElementById("homePage").classList.add("hidden");
-document.getElementById("loginPage").classList.remove("hidden");
+function showDoctor(){
+home.classList.add("hidden");
+login.classList.remove("hidden");
 }
-
-function goHome(){
-location.reload();
-}
+function goHome(){location.reload();}
 
 /* LOGIN */
 function login(){
-let u=document.getElementById("username").value;
-let p=document.getElementById("password").value;
-
-if(u==="doctor" && p==="1234"){
-loadPatients();
-}else{
-alert("Invalid Login ❌");
-}
+if(username.value==="doctor" && password.value==="1234"){
+loadDashboard();
+}else alert("Wrong Login");
 }
 
 /* ANALYZE */
 function analyze(){
 
-let name=document.getElementById("name").value;
+let name=nameInput();
+let age=document.getElementById("age").value;
+let severity=document.getElementById("severity").value;
+let location=document.getElementById("location").value;
+
 if(!name){alert("Enter name");return;}
 
-let severity=document.getElementById("severity").value;
-
-let symptoms=[...document.querySelectorAll(".symptom-item input:checked")]
-.map(x=>x.value);
+let symptoms=[...document.querySelectorAll(".symptom-item input:checked")].map(x=>x.value);
 
 let scores={eczema:0,acne:0,fungal:0,bacterial:0,pigmentation:0};
 
@@ -274,43 +266,78 @@ bacterial:"Bacterial Infection",
 pigmentation:"Pigmentation"
 };
 
+/* GRAPH */
 let graph="";
-for(let key in scores){
-let percent=total?Math.round((scores[key]/total)*100):0;
-graph+=`<div>${names[key]} (${percent}%)<div class="bar" style="width:${percent}%"></div></div>`;
+for(let k in scores){
+let p=total?Math.round(scores[k]/total*100):0;
+graph+=`${names[k]} (${p}%)<div class="bar" style="width:${p}%"></div>`;
 }
 
-document.getElementById("result").innerHTML=`
-<h3 style="text-align:center;">🧾 Diagnosis Report</h3>
-<p><b>👤 Name:</b> ${name}</p>
-<p><b>🦠 Condition:</b> ${names[disease]}</p>
-<p><b>⚠️ Severity:</b> ${severity}</p>
-<hr>
-${graph}
-<hr>
-<p><b>💊 Advice:</b> Maintain hygiene</p>
-<p><b>🛡 Precautions:</b> Avoid touching area</p>
-<p><b>👨‍⚕️ Doctor:</b> Consult if severe</p>
+/* REPORT */
+result.innerHTML=`
+<h2 style="text-align:center;">Diagnosis Report</h2>
+<p><b>Name:</b> ${name}</p>
+<p><b>Age:</b> ${age}</p>
+<p><b>Condition:</b> ${names[disease]}</p>
+<p><b>Severity:</b> ${severity}</p>
+<p><b>Location:</b> ${location}</p>
+<hr>${graph}<hr>
+<p><b>Advice:</b> Maintain hygiene</p>
+<p><b>Precautions:</b> Avoid touching</p>
+<p><b>Recovery:</b> 1-2 weeks</p>
+<p><b>Doctor:</b> Visit if severe</p>
 `;
 
-document.getElementById("popup").style.display="flex";
+popup.style.display="flex";
+
+/* SAVE */
+let data=JSON.parse(localStorage.getItem("patients")||"[]");
+data.push({name,age,disease:names[disease],date:new Date().toLocaleString()});
+localStorage.setItem("patients",JSON.stringify(data));
+}
+
+function nameInput(){
+return document.getElementById("name").value;
 }
 
 /* DASHBOARD */
-function loadPatients(){
-document.getElementById("loginPage").classList.add("hidden");
-document.getElementById("popup").style.display="flex";
-document.getElementById("result").innerHTML="<h2>👨‍⚕️ Doctor Dashboard (Coming Soon)</h2>";
+function loadDashboard(){
+
+let data=JSON.parse(localStorage.getItem("patients")||"[]");
+
+let diseaseCount={};
+data.forEach(p=>{
+if(!diseaseCount[p.disease]) diseaseCount[p.disease]=0;
+diseaseCount[p.disease]++;
+});
+
+let html="<h2>Doctor Dashboard</h2>";
+html+=`<p>Total Patients: ${data.length}</p>`;
+
+for(let d in diseaseCount){
+let percent=Math.round((diseaseCount[d]/data.length)*100);
+html+=`${d} (${percent}%)<div class="bar" style="width:${percent}%"></div>`;
 }
 
-/* CLOSE */
-function closePopup(){
-document.getElementById("popup").style.display="none";
+html+="<h3>Patients</h3>";
+
+data.forEach(p=>{
+html+=`<div class="card">${p.name} (${p.age}) - ${p.disease}</div>`;
+});
+
+result.innerHTML=html;
+popup.style.display="flex";
 }
 
 /* PDF */
 function downloadPDF(){
-html2pdf().from(document.getElementById("report")).save();
+html2pdf().from(resultBox).save();
+}
+
+/* CLOSE */
+function closePopup(){
+popup.style.display="none";
+goHome();
 }
 
 </script>
