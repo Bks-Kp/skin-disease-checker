@@ -1,24 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kalpana Skin Clinic</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
+
+*{box-sizing:border-box;}
+
 body{
-  font-family:Segoe UI;
+  font-family:'Segoe UI';
   background:linear-gradient(135deg,#0f172a,#1e3a8a);
   color:white;
   padding:20px;
 }
 
-.card{
-  max-width:800px;
+/* HOME */
+.home{
+  max-width:400px;
   margin:auto;
+  margin-top:100px;
+  background:#2b3f73;
+  padding:25px;
+  border-radius:15px;
+  text-align:center;
+}
+
+/* LOGIN */
+.login{
+  max-width:400px;
+  margin:auto;
+  margin-top:100px;
   background:#2b3f73;
   padding:25px;
   border-radius:15px;
 }
+
+/* MAIN */
+.container{
+  max-width:850px;
+  margin:auto;
+  background:#2b3f73;
+  padding:25px;
+  border-radius:15px;
+  animation:fadeIn 0.5s;
+}
+
+h2,h3{text-align:center;}
 
 input,select{
   width:100%;
@@ -28,37 +57,41 @@ input,select{
   border:none;
 }
 
+/* BUTTON */
 button{
   width:100%;
   padding:12px;
   margin-top:10px;
-  border:none;
   border-radius:10px;
+  border:none;
   background:linear-gradient(90deg,#38bdf8,#06b6d4);
   color:white;
   cursor:pointer;
   font-weight:bold;
+  transition:0.3s;
 }
+button:hover{transform:scale(1.03);}
 
-.grid{
+/* GRID FIX PERFECT */
+.symptom-grid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
-  gap:10px;
+  gap:12px;
 }
 
-.item{
+.symptom-item{
   display:flex;
   justify-content:space-between;
+  align-items:center;
+  padding:12px;
   background:#3d568a;
-  padding:10px;
   border-radius:10px;
 }
 
+/* MODAL */
 .modal{
   display:none;
   position:fixed;
-  top:0;
-  left:0;
   width:100%;
   height:100%;
   background:rgba(0,0,0,0.8);
@@ -66,207 +99,234 @@ button{
   align-items:center;
 }
 
-.modal-box{
+.modal-content{
   background:white;
   color:black;
   padding:20px;
-  border-radius:10px;
+  border-radius:12px;
   width:90%;
   max-width:600px;
+  max-height:80vh;
+  overflow:auto;
+  animation:scaleUp 0.4s;
 }
 
-.patient{
+/* CARD */
+.patient-card{
   background:#f1f5f9;
-  color:black;
-  padding:10px;
-  margin:10px 0;
+  padding:12px;
   border-radius:10px;
+  margin:10px 0;
 }
 
+/* GRAPH */
 .bar{
   height:8px;
   background:#38bdf8;
+  border-radius:5px;
   margin:5px 0;
 }
 
+/* ANIMATION */
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;}
+}
+@keyframes scaleUp{
+from{transform:scale(0.8);}
+to{transform:scale(1);}
+}
+
 .hidden{display:none;}
+
 </style>
 </head>
 
 <body>
 
 <!-- HOME -->
-<div id="home" class="card">
-<h2 style="text-align:center;">🏥 Kalpana Skin Clinic</h2>
-<button onclick="openPatient()">👤 Patient</button>
-<button onclick="openDoctor()">👨‍⚕️ Doctor</button>
-</div>
-
-<!-- PATIENT -->
-<div id="patient" class="card hidden">
-
-<h2>Patient Form</h2>
-
-<input id="name" placeholder="Name">
-<input id="age" placeholder="Age">
-
-<select id="body">
-<option>Body Location</option>
-<option>Face</option>
-<option>Arms</option>
-<option>Legs</option>
-<option>Feet</option>
-<option>Back</option>
-</select>
-
-<select id="duration">
-<option>Duration</option>
-<option>Less than 1 week</option>
-<option>1-2 weeks</option>
-<option>More than 2 weeks</option>
-</select>
-
-<select id="severity">
-<option>Severity</option>
-<option>Low</option>
-<option>Medium</option>
-<option>High</option>
-</select>
-
-<h3>Symptoms</h3>
-
-<div class="grid">
-<div class="item">Itching <input type="checkbox" value="itch"></div>
-<div class="item">Dry Skin <input type="checkbox" value="dry"></div>
-<div class="item">Redness <input type="checkbox" value="red"></div>
-<div class="item">Pimples <input type="checkbox" value="pimple"></div>
-<div class="item">Blackheads <input type="checkbox" value="black"></div>
-<div class="item">Pus <input type="checkbox" value="pus"></div>
-<div class="item">Ring Patch <input type="checkbox" value="ring"></div>
-<div class="item">Scaling <input type="checkbox" value="scale"></div>
-</div>
-
-<button onclick="analyze()">Analyze</button>
-<button onclick="goHome()">Back</button>
-
+<div id="home" class="home">
+<h2>🏥 Kalpana Skin Clinic</h2>
+<button onclick="showPatient()">👤 Patient</button>
+<button onclick="showLogin()">👨‍⚕️ Doctor</button>
 </div>
 
 <!-- LOGIN -->
-<div id="login" class="card hidden">
-<h2>Doctor Login</h2>
-<input id="user" placeholder="Username">
-<input id="pass" type="password" placeholder="Password">
+<div id="loginPage" class="login hidden">
+<h2>👨‍⚕️ Doctor Login</h2>
+<input id="username" placeholder="👤 Username">
+<input id="password" type="password" placeholder="🔒 Password">
 <button onclick="login()">Login</button>
-<button onclick="goHome()">Back</button>
+<button onclick="backHome()">⬅ Back</button>
+</div>
+
+<!-- PATIENT -->
+<div id="app" class="container hidden">
+
+<h2>🧠 Kalpana Skin Clinic</h2>
+
+<input id="name" placeholder="👤 Name">
+<input id="age" placeholder="🎂 Age">
+
+<select id="location">
+<option value="">📍 Body Location</option>
+<option>Face</option>
+<option>Hands</option>
+<option>Legs</option>
+</select>
+
+<select id="severity">
+<option value="">⚠️ Severity</option>
+<option>Mild</option>
+<option>Moderate</option>
+<option>Severe</option>
+</select>
+
+<h3>🩺 Symptoms</h3>
+
+<div class="symptom-grid">
+
+<div class="symptom-item">Itching <input type="checkbox" value="itch"></div>
+<div class="symptom-item">Dry Skin <input type="checkbox" value="dry"></div>
+
+<div class="symptom-item">Redness <input type="checkbox" value="redness"></div>
+<div class="symptom-item">Pimples <input type="checkbox" value="pimple"></div>
+
+<div class="symptom-item">Blackheads <input type="checkbox" value="blackhead"></div>
+<div class="symptom-item">Pus <input type="checkbox" value="pus"></div>
+
+<div class="symptom-item">Ring Patch <input type="checkbox" value="ring"></div>
+<div class="symptom-item">Scaling <input type="checkbox" value="scaling"></div>
+
+<div class="symptom-item">Dark Spots <input type="checkbox" value="dark"></div>
+
+</div>
+
+<button onclick="analyze()">🔍 Analyze</button>
+<button onclick="backHome()">⬅ Back</button>
+
 </div>
 
 <!-- POPUP -->
 <div id="popup" class="modal">
-<div class="modal-box" id="output"></div>
+<div class="modal-content" id="result"></div>
 </div>
 
 <script>
 
 /* NAV */
-function openPatient(){
-  document.getElementById("home").style.display="none";
-  document.getElementById("patient").style.display="block";
+function showPatient(){
+home.classList.add("hidden");
+app.classList.remove("hidden");
 }
-
-function openDoctor(){
-  document.getElementById("home").style.display="none";
-  document.getElementById("login").style.display="block";
+function showLogin(){
+home.classList.add("hidden");
+loginPage.classList.remove("hidden");
 }
-
-function goHome(){
-  location.reload();
-}
-
-/* ANALYZE */
-function analyze(){
-
-  let name=document.getElementById("name").value;
-  if(!name){alert("Enter name");return;}
-
-  let symptoms=[...document.querySelectorAll('.grid input:checked')].map(x=>x.value);
-
-  if(symptoms.length===0){
-    alert("Select symptoms");
-    return;
-  }
-
-  let scores={eczema:0,acne:0,fungal:0};
-
-  symptoms.forEach(s=>{
-    if(["itch","dry"].includes(s)) scores.eczema+=2;
-    if(["pimple","black"].includes(s)) scores.acne+=2;
-    if(["ring","scale"].includes(s)) scores.fungal+=3;
-  });
-
-  let disease=Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
-
-  let names={
-    eczema:"Eczema",
-    acne:"Acne",
-    fungal:"Fungal Infection"
-  };
-
-  let total=Object.values(scores).reduce((a,b)=>a+b,0);
-  let graph="";
-
-  for(let k in scores){
-    let p=total?Math.round(scores[k]/total*100):0;
-    graph+=`${names[k]} (${p}%)<div class="bar" style="width:${p}%"></div>`;
-  }
-
-  document.getElementById("output").innerHTML=`
-  <h2 style="text-align:center;">Report</h2>
-  <p>${name}</p>
-  <p>${names[disease]}</p>
-  ${graph}
-  <button onclick="closePopup()">Close</button>
-  `;
-
-  document.getElementById("popup").style.display="flex";
-
-  let data=JSON.parse(localStorage.getItem("patients")||"[]");
-  data.push({name,disease:names[disease]});
-  localStorage.setItem("patients",JSON.stringify(data));
+function backHome(){
+location.reload();
 }
 
 /* LOGIN */
 function login(){
-  let u=document.getElementById("user").value;
-  let p=document.getElementById("pass").value;
+if(username.value==="doctor" && password.value==="1234"){
+loadDashboard();
+}else{
+alert("Invalid Login ❌");
+}
+}
 
-  if(u==="doctor" && p==="1234"){
-    loadDashboard();
-  }else{
-    alert("Wrong login");
-  }
+/* ANALYZE FIXED */
+function analyze(){
+
+let name=document.getElementById("name").value;
+let severity=document.getElementById("severity").value;
+
+if(!name){alert("Enter name"); return;}
+
+let symptoms=Array.from(document.querySelectorAll("input:checked")).map(x=>x.value);
+
+let scores={eczema:0,acne:0,fungal:0};
+
+symptoms.forEach(s=>{
+if(["itch","dry"].includes(s)) scores.eczema+=2;
+if(["pimple","blackhead"].includes(s)) scores.acne+=2;
+if(["ring","scaling"].includes(s)) scores.fungal+=3;
+});
+
+let disease=Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
+
+let names={
+eczema:"Eczema",
+acne:"Acne",
+fungal:"Fungal Infection"
+};
+
+/* GRAPH */
+let graph="";
+let total=Object.values(scores).reduce((a,b)=>a+b,0);
+
+for(let k in scores){
+let p=total?Math.round(scores[k]/total*100):0;
+graph+=`${names[k]} (${p}%)<div class="bar" style="width:${p}%"></div>`;
+}
+
+/* REPORT */
+result.innerHTML=`
+<h2>🧾 Diagnosis Report</h2>
+
+<p>👤 ${name}</p>
+<p>🦠 ${names[disease]}</p>
+<p>⚠️ ${severity}</p>
+
+<hr>
+
+${graph}
+
+<hr>
+
+<p>💊 Advice: Maintain hygiene</p>
+<p>🛡 Precautions: Avoid touching</p>
+<p>⏳ Recovery: 1-2 weeks</p>
+<p>👨‍⚕️ Visit doctor if severe</p>
+
+<button onclick="closePopup()">Close</button>
+`;
+
+popup.style.display="flex";
+
+/* SAVE */
+let data=JSON.parse(localStorage.getItem("patients")||"[]");
+data.push({name,disease,date:new Date().toLocaleString()});
+localStorage.setItem("patients",JSON.stringify(data));
 }
 
 /* DASHBOARD */
 function loadDashboard(){
 
-  let data=JSON.parse(localStorage.getItem("patients")||"[]");
+let data=JSON.parse(localStorage.getItem("patients")||"[]");
 
-  let html="<h2>Dashboard</h2>";
+let html="<h2>👨‍⚕️ Doctor Dashboard</h2>";
 
-  data.forEach(p=>{
-    html+=`<div class="patient">${p.name} - ${p.disease}</div>`;
-  });
+data.forEach(p=>{
+html+=`
+<div class="patient-card">
+👤 ${p.name}<br>
+🦠 ${p.disease}<br>
+📅 ${p.date}
+</div>
+`;
+});
 
-  html+=`<button onclick="closePopup()">Close</button>`;
+html+=`<button onclick="closePopup()">Close</button>`;
 
-  document.getElementById("output").innerHTML=html;
-  document.getElementById("popup").style.display="flex";
+result.innerHTML=html;
+popup.style.display="flex";
 }
 
 /* CLOSE */
 function closePopup(){
-  document.getElementById("popup").style.display="none";
-  location.reload();
+popup.style.display="none";
 }
 
 </script>
