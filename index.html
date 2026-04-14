@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
 body{
 font-family:'Segoe UI';
 background:linear-gradient(135deg,#0f172a,#1e3a8a);
@@ -15,7 +16,7 @@ padding:20px;
 
 /* HOME */
 .home{text-align:center;margin-top:120px;}
-.home button{width:60%;margin:10px auto;}
+.home button{width:250px;margin:10px auto;display:block;}
 
 /* CONTAINER */
 .container{
@@ -26,14 +27,13 @@ padding:20px;
 border-radius:15px;
 }
 
-/* FORM */
-.form-grid{
-display:grid;
-grid-template-columns:1fr;
-gap:10px;
+/* INPUT STRUCTURE */
+.full-width{
+width:100%;
+margin-bottom:10px;
 }
 
-.row-3{
+.row{
 display:grid;
 grid-template-columns:1fr 1fr 1fr;
 gap:10px;
@@ -45,6 +45,7 @@ width:100%;
 padding:12px;
 border-radius:10px;
 border:none;
+height:45px;
 }
 
 /* BUTTON */
@@ -60,7 +61,7 @@ cursor:pointer;
 font-weight:bold;
 }
 
-/* SYMPTOMS */
+/* PERFECT SYMPTOMS */
 .symptom-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
@@ -74,6 +75,16 @@ align-items:center;
 padding:10px;
 background:rgba(255,255,255,0.08);
 border-radius:10px;
+height:45px;
+}
+
+.symptom-item span{
+flex:1;
+text-align:left;
+}
+
+.symptom-item input{
+margin-left:10px;
 }
 
 /* MODAL */
@@ -107,15 +118,8 @@ border-radius:10px;
 margin:10px 0;
 }
 
-/* GRAPH */
-.bar{
-height:8px;
-background:#38bdf8;
-margin:5px 0;
-border-radius:5px;
-}
-
 .hidden{display:none;}
+
 </style>
 </head>
 
@@ -142,10 +146,9 @@ border-radius:5px;
 
 <h2 style="text-align:center;">🧠 Skin Analyzer</h2>
 
-<div class="form-grid">
-<input id="name" placeholder="👤 Name">
+<input id="name" class="full-width" placeholder="👤 Name">
 
-<div class="row-3">
+<div class="row">
 <input id="age" placeholder="🎂 Age">
 
 <select id="location">
@@ -163,19 +166,18 @@ border-radius:5px;
 <option value="high">High</option>
 </select>
 </div>
-</div>
 
 <h3>🩺 Symptoms</h3>
 
 <div class="symptom-grid">
-<div class="symptom-item">Itching <input type="checkbox" value="itch"></div>
-<div class="symptom-item">Dry Skin <input type="checkbox" value="dry"></div>
-<div class="symptom-item">Redness <input type="checkbox" value="redness"></div>
-<div class="symptom-item">Pimples <input type="checkbox" value="pimple"></div>
-<div class="symptom-item">Blackheads <input type="checkbox" value="blackhead"></div>
-<div class="symptom-item">Pus <input type="checkbox" value="pus"></div>
-<div class="symptom-item">Ring Patch <input type="checkbox" value="ring"></div>
-<div class="symptom-item">Scaling <input type="checkbox" value="scaling"></div>
+<div class="symptom-item"><span>Itching</span><input type="checkbox" value="itch"></div>
+<div class="symptom-item"><span>Dry Skin</span><input type="checkbox" value="dry"></div>
+<div class="symptom-item"><span>Redness</span><input type="checkbox" value="redness"></div>
+<div class="symptom-item"><span>Pimples</span><input type="checkbox" value="pimple"></div>
+<div class="symptom-item"><span>Blackheads</span><input type="checkbox" value="blackhead"></div>
+<div class="symptom-item"><span>Pus</span><input type="checkbox" value="pus"></div>
+<div class="symptom-item"><span>Ring Patch</span><input type="checkbox" value="ring"></div>
+<div class="symptom-item"><span>Scaling</span><input type="checkbox" value="scaling"></div>
 </div>
 
 <button onclick="analyze()">🔍 Analyze</button>
@@ -187,35 +189,41 @@ border-radius:5px;
 <div id="popup" class="modal">
 <div class="modal-content" id="resultBox">
 <div id="result"></div>
-<button onclick="downloadPDF()">📄 Download PDF</button>
 <button onclick="closePopup()">Close</button>
 </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 <script>
 
-/* NAV */
+/* NAVIGATION */
 function showPatient(){
-home.style.display="none";
-app.style.display="block";
+document.getElementById("home").style.display="none";
+document.getElementById("app").style.display="block";
 }
+
 function showDoctor(){
-home.style.display="none";
-login.style.display="block";
+document.getElementById("home").style.display="none";
+document.getElementById("login").style.display="block"; // FIXED
 }
-function goHome(){location.reload();}
+
+function goHome(){
+location.reload();
+}
 
 /* LOGIN */
 function login(){
-if(username.value==="doctor" && password.value==="1234"){
-login.style.display="none";
+let u=document.getElementById("username").value;
+let p=document.getElementById("password").value;
+
+if(u==="doctor" && p==="1234"){
+document.getElementById("login").style.display="none";
 loadDashboard();
-}else alert("Wrong login");
+}else{
+alert("Invalid Login ❌");
+}
 }
 
-/* ANALYZE FIXED */
+/* ANALYZE */
 function analyze(){
 
 let name=document.getElementById("name").value;
@@ -234,22 +242,21 @@ if(symptoms.includes("pimple")) disease="Acne";
 else if(symptoms.includes("ring")) disease="Fungal Infection";
 else if(symptoms.includes("itch")) disease="Eczema";
 
-/* POPUP WORKING */
+/* POPUP */
 document.getElementById("result").innerHTML=`
 <h2 style="text-align:center;">🧾 Patient Report</h2>
 
-<p>👤 <b>${name}</b></p>
-<p>🎂 Age: ${age}</p>
-<p>📍 Location: ${location}</p>
-<p>⚠️ Severity: ${severity}</p>
-<p>🦠 Condition: <b>${disease}</b></p>
+<p><b>Name:</b> ${name}</p>
+<p><b>Age:</b> ${age}</p>
+<p><b>Location:</b> ${location}</p>
+<p><b>Severity:</b> ${severity}</p>
+<p><b>Condition:</b> ${disease}</p>
 
 <hr>
 
 <p>💊 Advice: Maintain hygiene</p>
 <p>🛡 Precautions: Avoid touching area</p>
 <p>⏳ Recovery: 1-2 weeks</p>
-<p>🚨 Doctor: Visit if severe</p>
 `;
 
 document.getElementById("popup").style.display="flex";
@@ -260,7 +267,7 @@ data.push({name,age,location,severity,disease,date:new Date().toLocaleString()})
 localStorage.setItem("patients",JSON.stringify(data));
 }
 
-/* DASHBOARD FULL REPORT */
+/* DASHBOARD */
 function loadDashboard(){
 
 let data=JSON.parse(localStorage.getItem("patients")||"[]");
@@ -268,14 +275,7 @@ let data=JSON.parse(localStorage.getItem("patients")||"[]");
 let html="<h2>👨‍⚕️ Doctor Dashboard</h2>";
 
 data.forEach(p=>{
-html+=`
-<div class="card">
-<b>${p.name}</b> (${p.age})<br>
-📍 ${p.location}<br>
-⚠️ ${p.severity}<br>
-🦠 ${p.disease}<br>
-📅 ${p.date}
-</div>`;
+html+=`<div class="card">${p.name} (${p.age}) - ${p.disease}</div>`;
 });
 
 document.getElementById("result").innerHTML=html;
@@ -284,12 +284,7 @@ document.getElementById("popup").style.display="flex";
 
 /* CLOSE */
 function closePopup(){
-popup.style.display="none";
-}
-
-/* PDF */
-function downloadPDF(){
-html2pdf().from(resultBox).save();
+document.getElementById("popup").style.display="none";
 }
 
 </script>
