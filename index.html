@@ -6,7 +6,6 @@
 
 <style>
 
-/* BACKGROUND */
 body{
 font-family:'Segoe UI';
 background:linear-gradient(135deg,#0f172a,#1e3a8a);
@@ -16,14 +15,8 @@ padding:20px;
 }
 
 /* HOME */
-.home{
-text-align:center;
-margin-top:120px;
-}
-.home button{
-width:60%;
-margin:10px auto;
-}
+.home{text-align:center;margin-top:120px;}
+.home button{width:60%;margin:10px auto;}
 
 /* CONTAINER */
 .container{
@@ -34,14 +27,11 @@ padding:20px;
 border-radius:15px;
 }
 
-/* GRID */
+/* FORM GRID (FIXED) */
 .form-grid{
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:1fr 1fr;
 gap:12px;
-}
-@media(max-width:600px){
-.form-grid{grid-template-columns:1fr;}
 }
 
 /* INPUT */
@@ -50,6 +40,7 @@ width:100%;
 padding:12px;
 border-radius:10px;
 border:none;
+height:45px;
 }
 
 /* BUTTON */
@@ -65,20 +56,27 @@ cursor:pointer;
 font-weight:bold;
 }
 
-/* SYMPTOMS */
+/* 🔥 PERFECT SYMPTOM GRID */
 .symptom-grid{
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:1fr 1fr;
 gap:10px;
 }
+
 .symptom-item{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:12px;
-height:50px;
+padding:10px 12px;
 background:rgba(255,255,255,0.08);
 border-radius:10px;
+height:45px;
+font-size:14px;
+}
+
+.symptom-item input{
+width:18px;
+height:18px;
 }
 
 /* MODAL */
@@ -103,7 +101,7 @@ max-height:85vh;
 overflow:auto;
 }
 
-/* DASHBOARD */
+/* CARD */
 .card{
 background:#f1f5f9;
 color:black;
@@ -146,12 +144,11 @@ border-radius:5px;
 <!-- PATIENT -->
 <div id="app" class="container hidden">
 
-<h2 style="text-align:center;">🧠 Skin Disease Analyzer</h2>
+<h2 style="text-align:center;">🧠 Skin Analyzer</h2>
 
 <div class="form-grid">
 <input id="name" placeholder="👤 Name">
 <input id="age" placeholder="🎂 Age">
-
 <select id="location">
 <option>Body Location</option>
 <option>Face</option>
@@ -193,13 +190,15 @@ border-radius:5px;
 <div id="popup" class="modal">
 <div class="modal-content" id="resultBox">
 <div id="result"></div>
-<button onclick="closePopup()">Close</button>
+<button onclick="downloadPDF()">📄 Download PDF</button>
 </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
 
-/* NAVIGATION */
+/* NAV */
 function showPatient(){
 document.getElementById("home").style.display="none";
 document.getElementById("app").style.display="block";
@@ -210,9 +209,7 @@ document.getElementById("home").style.display="none";
 document.getElementById("login").style.display="block";
 }
 
-function goHome(){
-location.reload();
-}
+function goHome(){location.reload();}
 
 /* LOGIN */
 function login(){
@@ -220,14 +217,13 @@ let u=document.getElementById("username").value;
 let p=document.getElementById("password").value;
 
 if(u==="doctor" && p==="1234"){
-document.getElementById("login").style.display="none";
 loadDashboard();
 }else{
 alert("Invalid Login ❌");
 }
 }
 
-/* ANALYZE */
+/* ANALYZE (FIXED) */
 function analyze(){
 
 let name=document.getElementById("name").value;
@@ -235,44 +231,18 @@ let age=document.getElementById("age").value;
 let severity=document.getElementById("severity").value;
 let location=document.getElementById("location").value;
 
-if(!name){alert("Enter name");return;}
-
 let symptoms=[...document.querySelectorAll(".symptom-item input:checked")].map(x=>x.value);
 
-if(symptoms.length===0){
-alert("Select symptoms");
-return;
-}
+if(!name){alert("Enter name");return;}
+if(symptoms.length===0){alert("Select symptoms");return;}
 
-let scores={eczema:0,acne:0,fungal:0,bacterial:0,pigmentation:0};
+let disease="General Skin Issue";
 
-symptoms.forEach(s=>{
-if(["itch","dry","redness"].includes(s)) scores.eczema+=2;
-if(["pimple","blackhead"].includes(s)) scores.acne+=2;
-if(["ring","scaling"].includes(s)) scores.fungal+=3;
-if(["pus"].includes(s)) scores.bacterial+=3;
-if(["dark"].includes(s)) scores.pigmentation+=2;
-});
+if(symptoms.includes("pimple")) disease="Acne";
+else if(symptoms.includes("ring")) disease="Fungal Infection";
+else if(symptoms.includes("itch")) disease="Eczema";
 
-let total=Object.values(scores).reduce((a,b)=>a+b,0);
-let disease=Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
-
-let names={
-eczema:"Eczema",
-acne:"Acne",
-fungal:"Fungal Infection",
-bacterial:"Bacterial Infection",
-pigmentation:"Pigmentation"
-};
-
-/* GRAPH */
-let graph="";
-for(let k in scores){
-let p=total?Math.round(scores[k]/total*100):0;
-graph+=`${names[k]} (${p}%)<div class="bar" style="width:${p}%"></div>`;
-}
-
-/* REPORT (UPGRADED) */
+/* REPORT */
 document.getElementById("result").innerHTML=`
 <h2 style="text-align:center;">🧾 Diagnosis Report</h2>
 
@@ -280,37 +250,21 @@ document.getElementById("result").innerHTML=`
 <p>🎂 <b>Age:</b> ${age}</p>
 <p>📍 <b>Location:</b> ${location}</p>
 <p>⚠️ <b>Severity:</b> ${severity}</p>
-<p>🦠 <b>Condition:</b> ${names[disease]}</p>
+<p>🦠 <b>Condition:</b> ${disease}</p>
 
 <hr>
 
-<h3>📊 Analysis</h3>
-${graph}
-
-<hr>
-
-<h3>💊 Treatment Guidance</h3>
-<p>✔ Maintain proper hygiene</p>
-<p>✔ Avoid touching infected area</p>
-
-<h3>🛡 Precautions</h3>
-<p>✔ Keep skin dry & clean</p>
-<p>✔ Avoid sharing personal items</p>
-
-<h3>⏳ Recovery</h3>
-<p>1–2 weeks (depends on severity)</p>
-
-<h3>🚨 When to see doctor</h3>
-<p>${severity==="high"?"⚠ Immediate consultation required":"Visit if symptoms persist"}</p>
-
-<p style="color:red;">⚠ This is not a medical diagnosis</p>
+<p>💊 Advice: Maintain hygiene</p>
+<p>🛡 Precautions: Avoid touching infected area</p>
+<p>⏳ Recovery: 1-2 weeks</p>
+<p>🚨 Doctor: Visit if severe</p>
 `;
 
 document.getElementById("popup").style.display="flex";
 
 /* SAVE */
 let data=JSON.parse(localStorage.getItem("patients")||"[]");
-data.push({name,age,disease:names[disease],date:new Date().toLocaleString()});
+data.push({name,age,disease,date:new Date().toLocaleString()});
 localStorage.setItem("patients",JSON.stringify(data));
 }
 
@@ -319,24 +273,19 @@ function loadDashboard(){
 
 let data=JSON.parse(localStorage.getItem("patients")||"[]");
 
-let html="<h2 style='text-align:center;'>👨‍⚕️ Doctor Dashboard</h2>";
-
-html+=`<p><b>Total Patients:</b> ${data.length}</p>`;
+let html="<h2>👨‍⚕️ Doctor Dashboard</h2>";
 
 data.forEach(p=>{
-html+=`<div class="card">👤 ${p.name} (${p.age})<br>🦠 ${p.disease}<br>📅 ${p.date}</div>`;
+html+=`<div class="card">${p.name} (${p.age}) - ${p.disease}</div>`;
 });
-
-html+=`<button onclick="closePopup()">❌ Close</button>`;
 
 document.getElementById("result").innerHTML=html;
 document.getElementById("popup").style.display="flex";
 }
 
-/* CLOSE */
-function closePopup(){
-document.getElementById("popup").style.display="none";
-goHome();
+/* PDF */
+function downloadPDF(){
+html2pdf().from(resultBox).save();
 }
 
 </script>
