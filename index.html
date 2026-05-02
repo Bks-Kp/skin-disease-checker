@@ -5,115 +5,118 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
+/* BASE */
 body{
 font-family:'Segoe UI';
-background:linear-gradient(135deg,#0f172a,#1e3a8a);
-color:white;
 margin:0;
-padding:20px;
+background:#f4f8fc;
+color:#1e293b;
 }
 
-.card{
+/* HEADER */
+.header{
+background:#1e40af;
+color:white;
+padding:15px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
+
+/* CONTAINER */
+.container{
 max-width:900px;
-margin:auto;
-background:rgba(255,255,255,0.08);
-padding:25px;
-border-radius:15px;
+margin:20px auto;
+background:white;
+padding:20px;
+border-radius:12px;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
 }
 
-.home{text-align:center;margin-top:120px;}
+/* BUTTON */
 button{
 width:100%;
 padding:12px;
 margin-top:10px;
 border:none;
-border-radius:10px;
-background:#38bdf8;
+border-radius:8px;
+background:#2563eb;
 color:white;
 font-weight:bold;
 cursor:pointer;
 }
+button:hover{background:#1d4ed8;}
 
+/* INPUT */
 input,select{
 width:100%;
-padding:12px;
+padding:10px;
 margin:8px 0;
-border-radius:10px;
-border:none;
+border-radius:8px;
+border:1px solid #cbd5e1;
 }
 
-.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+/* GRID */
+.row{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:10px;
+}
 
+/* SYMPTOMS */
 .symptom-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:10px;
 }
-
 .symptom-item{
 display:flex;
 justify-content:space-between;
 padding:10px;
-background:#1e293b;
-border-radius:10px;
+border:1px solid #e2e8f0;
+border-radius:8px;
 }
 
-/* POPUP */
-.modal{
-display:none;
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:rgba(0,0,0,0.8);
-justify-content:center;
-align-items:center;
-}
-
-.modal-box{
-background:white;
-color:black;
-padding:20px;
-border-radius:10px;
-width:90%;
-max-width:650px;
-max-height:85vh;
-overflow:auto;
-}
-
-.hidden{display:none;}
-
-.patient-card{
+/* DASHBOARD */
+.card{
 background:#f1f5f9;
-color:black;
 padding:10px;
+border-radius:8px;
 margin:8px 0;
-border-radius:10px;
 cursor:pointer;
 }
+
+/* HIDE */
+.hidden{display:none;}
+
 </style>
 </head>
 
 <body>
 
+<div class="header">🏥 Kalpana Skin Clinic</div>
+
 <!-- HOME -->
-<div id="home" class="home">
-<h2>🏥 Kalpana Skin Clinic</h2>
-<button onclick="openPatient()">👤 Patient</button>
-<button onclick="openDoctor()">👨‍⚕️ Doctor</button>
+<div id="home" class="container">
+<h3>Select Role</h3>
+<button onclick="showPatient()">👤 Patient</button>
+<button onclick="showDoctor()">👨‍⚕️ Doctor</button>
 </div>
 
 <!-- LOGIN -->
-<div id="login" class="card hidden">
-<h2>Doctor Login</h2>
+<div id="login" class="container hidden">
+<h3>Doctor Login</h3>
 <input id="user" placeholder="Username">
 <input id="pass" type="password" placeholder="Password">
 <button onclick="login()">Login</button>
+<button onclick="goHome()">Back</button>
 </div>
 
 <!-- PATIENT -->
-<div id="patient" class="card hidden">
+<div id="patient" class="container hidden">
 
-<h2>Skin Form</h2>
+<h3>Patient Details</h3>
 
 <input id="name" placeholder="Name">
 
@@ -134,7 +137,7 @@ cursor:pointer;
 </select>
 </div>
 
-<h3>Symptoms</h3>
+<h4>Symptoms</h4>
 
 <div class="symptom-grid">
 <div class="symptom-item">Itch <input type="checkbox" value="itch"></div>
@@ -143,33 +146,37 @@ cursor:pointer;
 <div class="symptom-item">Dry <input type="checkbox" value="dry"></div>
 </div>
 
-<button onclick="analyze()">Analyze</button>
+<button onclick="analyze()">Generate Prescription</button>
+<button onclick="goHome()">Back</button>
 
 </div>
 
-<!-- POPUP -->
-<div id="popup" class="modal">
-<div class="modal-box" id="output"></div>
-</div>
+<!-- DOCTOR DASHBOARD -->
+<div id="dashboard" class="container hidden"></div>
 
 <script>
 
 /* NAV */
-function openPatient(){
-home.style.display="none";
+function showPatient(){
+home.classList.add("hidden");
 patient.classList.remove("hidden");
 }
 
-function openDoctor(){
-home.style.display="none";
+function showDoctor(){
+home.classList.add("hidden");
 login.classList.remove("hidden");
 }
 
-/* LOGIN */
+function goHome(){
+location.reload();
+}
+
+/* LOGIN FIXED */
 function login(){
 if(user.value==="Kalpana" && pass.value==="Project"){
+login.classList.add("hidden");
 loadDashboard();
-}else alert("Wrong login");
+}else alert("Invalid login");
 }
 
 /* ANALYZE */
@@ -192,37 +199,33 @@ if(symptoms.includes("itch")) disease="Eczema";
 
 /* SAVE */
 let data=JSON.parse(localStorage.getItem("patients")||"[]");
-data.push({
-name,age,location,severity,disease,date:new Date().toLocaleDateString()
-});
+data.push({name,age,location,severity,disease,date:new Date().toLocaleDateString()});
 localStorage.setItem("patients",JSON.stringify(data));
 
 /* PRESCRIPTION */
-output.innerHTML=`
-<h2 style="text-align:center;">🏥 Kalpana Skin Clinic</h2>
-<p><b>Doctor:</b> Mrs. Kalpana Bharath</p>
+alert(`
+Kalpana Skin Clinic
 
-<hr>
+Doctor: Mrs. Kalpana Bharath
 
-<p><b>Patient:</b> ${name}</p>
-<p><b>Age:</b> ${age}</p>
-<p><b>Condition:</b> ${disease}</p>
+Patient: ${name}
+Age: ${age}
 
-<hr>
+Condition: ${disease}
 
-<p>💊 Advice: Maintain hygiene</p>
-<p>🛡 Precautions: Avoid touching area</p>
-<p>⏳ Recovery: 1-2 weeks</p>
+Advice:
+- Maintain hygiene
+- Avoid touching area
 
-<button onclick="window.print()">Download</button>
-<button onclick="closePopup()">Close</button>
-`;
+Recovery: 1-2 weeks
+`);
 
-popup.style.display="flex";
 }
 
-/* DASHBOARD */
+/* DASHBOARD FIXED */
 function loadDashboard(){
+
+dashboard.classList.remove("hidden");
 
 let data=JSON.parse(localStorage.getItem("patients")||"[]");
 
@@ -230,64 +233,33 @@ let today=new Date().toLocaleDateString();
 
 let todayPatients=data.filter(p=>p.date===today);
 
-/* Severity Count */
 let severityCount={low:0,medium:0,high:0};
 
 todayPatients.forEach(p=>{
 severityCount[p.severity]++;
 });
 
-/* Top 5 */
-let top5=todayPatients.slice(-5).reverse();
-
 let html=`
-<h2>Doctor Dashboard</h2>
+<h3>Doctor Dashboard</h3>
 
 <p><b>Patients Today:</b> ${todayPatients.length}</p>
 
-<p><b>Severity:</b></p>
-Low: ${severityCount.low} <br>
-Medium: ${severityCount.medium} <br>
+<p>
+Low: ${severityCount.low} |
+Medium: ${severityCount.medium} |
 High: ${severityCount.high}
+</p>
 
-<hr>
-
-<h3>Top 5 Patients</h3>
+<h4>Top 5 Patients</h4>
 `;
 
-top5.forEach(p=>{
-html+=`
-<div class="patient-card" onclick="viewPatient('${p.name}','${p.age}','${p.disease}','${p.location}','${p.severity}')">
-${p.name} (${p.age}) - ${p.disease}
-</div>`;
+todayPatients.slice(-5).reverse().forEach(p=>{
+html+=`<div class="card">${p.name} (${p.age}) - ${p.disease}</div>`;
 });
 
-html+=`<button onclick="closePopup()">Close</button>`;
+html+=`<button onclick="goHome()">Logout</button>`;
 
-output.innerHTML=html;
-popup.style.display="flex";
-}
-
-/* VIEW DETAILS */
-function viewPatient(name,age,disease,location,severity){
-
-output.innerHTML=`
-<h2>Patient Details</h2>
-
-<p><b>Name:</b> ${name}</p>
-<p><b>Age:</b> ${age}</p>
-<p><b>Location:</b> ${location}</p>
-<p><b>Severity:</b> ${severity}</p>
-<p><b>Disease:</b> ${disease}</p>
-
-<button onclick="closePopup()">Close</button>
-`;
-}
-
-/* CLOSE */
-function closePopup(){
-popup.style.display="none";
-location.reload();
+dashboard.innerHTML=html;
 }
 
 </script>
