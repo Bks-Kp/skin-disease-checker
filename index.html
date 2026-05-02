@@ -1,182 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Kalpana Skin Clinic</title>
+<title>Skin Clinic</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-
-/* BASE */
-body{
-font-family:'Segoe UI';
-margin:0;
-background:#f4f8fc;
-color:#1e293b;
-}
-
-/* HEADER */
-.header{
-background:#1e40af;
-color:white;
-padding:15px;
-text-align:center;
-font-size:22px;
-font-weight:bold;
-}
-
-/* CONTAINER */
-.container{
-max-width:900px;
-margin:20px auto;
-background:white;
-padding:20px;
-border-radius:12px;
-box-shadow:0 5px 20px rgba(0,0,0,0.1);
-}
-
-/* BUTTON */
-button{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:8px;
-background:#2563eb;
-color:white;
-font-weight:bold;
-cursor:pointer;
-}
-button:hover{background:#1d4ed8;}
-
-/* INPUT */
-input,select{
-width:100%;
-padding:10px;
-margin:8px 0;
-border-radius:8px;
-border:1px solid #cbd5e1;
-}
-
-/* GRID */
-.row{
-display:grid;
-grid-template-columns:1fr 1fr 1fr;
-gap:10px;
-}
-
-/* SYMPTOMS */
-.symptom-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-}
-.symptom-item{
-display:flex;
-justify-content:space-between;
-padding:10px;
-border:1px solid #e2e8f0;
-border-radius:8px;
-}
-
-/* DASHBOARD */
-.card{
-background:#f1f5f9;
-padding:10px;
-border-radius:8px;
-margin:8px 0;
-cursor:pointer;
-}
-
-/* HIDE */
-.hidden{display:none;}
-
-</style>
 </head>
 
 <body>
 
-<div class="header">🏥 Kalpana Skin Clinic</div>
-
 <!-- HOME -->
-<div id="home" class="container">
-<h3>Select Role</h3>
-<button onclick="showPatient()">👤 Patient</button>
-<button onclick="showDoctor()">👨‍⚕️ Doctor</button>
-</div>
-
-<!-- LOGIN -->
-<div id="login" class="container hidden">
-<h3>Doctor Login</h3>
-<input id="user" placeholder="Username">
-<input id="pass" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
-<button onclick="goHome()">Back</button>
+<div id="home">
+<h2>Home</h2>
+<button onclick="goPatient()">Patient</button>
+<button onclick="goDoctor()">Doctor</button>
 </div>
 
 <!-- PATIENT -->
-<div id="patient" class="container hidden">
+<div id="patient" style="display:none;">
+<h2>Patient Form</h2>
 
-<h3>Patient Details</h3>
-
-<input id="name" placeholder="Name">
-
-<div class="row">
-<input id="age" placeholder="Age">
-
-<select id="location">
-<option>Location</option>
-<option>Face</option>
-<option>Hands</option>
-<option>Legs</option>
-</select>
+<input id="name" placeholder="Name"><br>
+<input id="age" placeholder="Age"><br>
 
 <select id="severity">
 <option value="low">Low</option>
 <option value="medium">Medium</option>
 <option value="high">High</option>
-</select>
-</div>
+</select><br>
 
-<h4>Symptoms</h4>
+<label><input type="checkbox" value="itch"> Itch</label><br>
+<label><input type="checkbox" value="pimple"> Pimple</label><br>
+<label><input type="checkbox" value="ring"> Ring</label><br>
 
-<div class="symptom-grid">
-<div class="symptom-item">Itch <input type="checkbox" value="itch"></div>
-<div class="symptom-item">Pimple <input type="checkbox" value="pimple"></div>
-<div class="symptom-item">Ring <input type="checkbox" value="ring"></div>
-<div class="symptom-item">Dry <input type="checkbox" value="dry"></div>
-</div>
-
-<button onclick="analyze()">Generate Prescription</button>
+<button onclick="analyze()">Submit</button>
 <button onclick="goHome()">Back</button>
-
 </div>
 
-<!-- DOCTOR DASHBOARD -->
-<div id="dashboard" class="container hidden"></div>
+<!-- LOGIN -->
+<div id="login" style="display:none;">
+<h2>Doctor Login</h2>
+
+<input id="user" placeholder="Username"><br>
+<input id="pass" type="password" placeholder="Password"><br>
+
+<button onclick="login()">Login</button>
+<button onclick="goHome()">Back</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" style="display:none;">
+<h2>Doctor Dashboard</h2>
+<div id="dashContent"></div>
+<button onclick="goHome()">Logout</button>
+</div>
+
+<!-- REPORT -->
+<div id="report" style="display:none;">
+<h2>Prescription</h2>
+<div id="reportData"></div>
+<button onclick="goHome()">Done</button>
+</div>
 
 <script>
 
-/* NAV */
-function showPatient(){
-home.classList.add("hidden");
-patient.classList.remove("hidden");
-}
-
-function showDoctor(){
-home.classList.add("hidden");
-login.classList.remove("hidden");
-}
-
+/* NAVIGATION */
 function goHome(){
-location.reload();
+show("home");
 }
 
-/* LOGIN FIXED */
-function login(){
-if(user.value==="Kalpana" && pass.value==="Project"){
-login.classList.add("hidden");
-loadDashboard();
-}else alert("Invalid login");
+function goPatient(){
+show("patient");
+}
+
+function goDoctor(){
+show("login");
+}
+
+function show(page){
+document.getElementById("home").style.display="none";
+document.getElementById("patient").style.display="none";
+document.getElementById("login").style.display="none";
+document.getElementById("dashboard").style.display="none";
+document.getElementById("report").style.display="none";
+
+document.getElementById(page).style.display="block";
 }
 
 /* ANALYZE */
@@ -184,82 +90,67 @@ function analyze(){
 
 let name=document.getElementById("name").value;
 let age=document.getElementById("age").value;
-let location=document.getElementById("location").value;
 let severity=document.getElementById("severity").value;
 
-let symptoms=[...document.querySelectorAll(".symptom-item input:checked")].map(x=>x.value);
+let symptoms=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value);
 
 if(!name){alert("Enter name");return;}
-if(symptoms.length===0){alert("Select symptoms");return;}
 
-let disease="General Skin Issue";
+let disease="General";
 if(symptoms.includes("pimple")) disease="Acne";
-if(symptoms.includes("ring")) disease="Fungal Infection";
+if(symptoms.includes("ring")) disease="Fungal";
 if(symptoms.includes("itch")) disease="Eczema";
 
 /* SAVE */
 let data=JSON.parse(localStorage.getItem("patients")||"[]");
-data.push({name,age,location,severity,disease,date:new Date().toLocaleDateString()});
+data.push({
+name:name,
+age:age,
+severity:severity,
+disease:disease,
+date:new Date().toLocaleDateString()
+});
 localStorage.setItem("patients",JSON.stringify(data));
 
-/* PRESCRIPTION */
-alert(`
-Kalpana Skin Clinic
+/* REPORT */
+document.getElementById("reportData").innerHTML=
+"Name: "+name+"<br>"+
+"Age: "+age+"<br>"+
+"Disease: "+disease;
 
-Doctor: Mrs. Kalpana Bharath
-
-Patient: ${name}
-Age: ${age}
-
-Condition: ${disease}
-
-Advice:
-- Maintain hygiene
-- Avoid touching area
-
-Recovery: 1-2 weeks
-`);
-
+show("report");
 }
 
-/* DASHBOARD FIXED */
-function loadDashboard(){
+/* LOGIN */
+function login(){
+let u=document.getElementById("user").value;
+let p=document.getElementById("pass").value;
 
-dashboard.classList.remove("hidden");
+if(u==="Kalpana" && p==="Project"){
+loadDashboard();
+}else{
+alert("Wrong login");
+}
+}
+
+/* DASHBOARD */
+function loadDashboard(){
 
 let data=JSON.parse(localStorage.getItem("patients")||"[]");
 
 let today=new Date().toLocaleDateString();
 
-let todayPatients=data.filter(p=>p.date===today);
+let todayList=data.filter(p=>p.date===today);
 
-let severityCount={low:0,medium:0,high:0};
+let html="Total Today: "+todayList.length+"<br><br>";
 
-todayPatients.forEach(p=>{
-severityCount[p.severity]++;
+todayList.forEach(p=>{
+html+=p.name+" - "+p.disease+"<br>";
 });
 
-let html=`
-<h3>Doctor Dashboard</h3>
+document.getElementById("dashContent").innerHTML=html;
 
-<p><b>Patients Today:</b> ${todayPatients.length}</p>
-
-<p>
-Low: ${severityCount.low} |
-Medium: ${severityCount.medium} |
-High: ${severityCount.high}
-</p>
-
-<h4>Top 5 Patients</h4>
-`;
-
-todayPatients.slice(-5).reverse().forEach(p=>{
-html+=`<div class="card">${p.name} (${p.age}) - ${p.disease}</div>`;
-});
-
-html+=`<button onclick="goHome()">Logout</button>`;
-
-dashboard.innerHTML=html;
+show("dashboard");
 }
 
 </script>
