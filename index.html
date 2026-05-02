@@ -1,72 +1,184 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Skin Clinic</title>
+<title>Kalpana Skin Clinic</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+
+/* 🌌 BACKGROUND */
+body{
+font-family:'Segoe UI',sans-serif;
+margin:0;
+padding:20px;
+background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+color:white;
+}
+
+/* 🏥 CARD */
+.page{
+max-width:500px;
+margin:auto;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+padding:25px;
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+animation:fade 0.4s ease;
+}
+
+/* 🧾 HEADINGS */
+h2{
+text-align:center;
+margin-bottom:15px;
+}
+
+/* 📥 INPUT */
+input,select{
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:10px;
+border:none;
+outline:none;
+}
+
+/* 🔘 BUTTON */
+button{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:10px;
+background:linear-gradient(90deg,#38bdf8,#06b6d4);
+color:white;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+button:hover{
+transform:scale(1.03);
+box-shadow:0 0 10px #38bdf8;
+}
+
+/* GRID */
+.row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+/* SYMPTOMS */
+.symptoms{
+margin-top:10px;
+}
+.symptoms label{
+display:flex;
+justify-content:space-between;
+background:rgba(255,255,255,0.1);
+padding:10px;
+border-radius:10px;
+margin-bottom:5px;
+}
+
+/* DASHBOARD */
+.card{
+background:white;
+color:black;
+padding:10px;
+border-radius:10px;
+margin:8px 0;
+}
+
+/* REPORT */
+#reportBox{
+background:white;
+color:black;
+padding:20px;
+border-radius:12px;
+}
+
+/* ANIMATION */
+@keyframes fade{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;}
+}
+
+/* HIDE */
+.hidden{display:none;}
+
+</style>
 </head>
 
 <body>
 
 <!-- HOME -->
-<div id="home">
-<h2>Home</h2>
-<button onclick="goPatient()">Patient</button>
-<button onclick="goDoctor()">Doctor</button>
+<div id="home" class="page">
+<h2>🏥 Kalpana Skin Clinic</h2>
+<button onclick="goPatient()">👤 Patient</button>
+<button onclick="goDoctor()">👨‍⚕️ Doctor</button>
 </div>
 
 <!-- PATIENT -->
-<div id="patient" style="display:none;">
-<h2>Patient Form</h2>
+<div id="patient" class="page hidden">
 
-<input id="name" placeholder="Name"><br>
-<input id="age" placeholder="Age"><br>
+<h2>🧠 Patient Form</h2>
+
+<input id="name" placeholder="👤 Name">
+
+<div class="row">
+<input id="age" placeholder="🎂 Age">
 
 <select id="severity">
 <option value="low">Low</option>
 <option value="medium">Medium</option>
 <option value="high">High</option>
-</select><br>
+</select>
+</div>
 
-<label><input type="checkbox" value="itch"> Itch</label><br>
-<label><input type="checkbox" value="pimple"> Pimple</label><br>
-<label><input type="checkbox" value="ring"> Ring</label><br>
+<h3>🩺 Symptoms</h3>
 
-<button onclick="analyze()">Submit</button>
-<button onclick="goHome()">Back</button>
+<div class="symptoms">
+<label>Itching <input type="checkbox" value="itch"></label>
+<label>Pimples <input type="checkbox" value="pimple"></label>
+<label>Ring Patch <input type="checkbox" value="ring"></label>
+<label>Dry Skin <input type="checkbox" value="dry"></label>
+</div>
+
+<button onclick="analyze()">🔍 Analyze</button>
+<button onclick="goHome()">⬅ Back</button>
+
 </div>
 
 <!-- LOGIN -->
-<div id="login" style="display:none;">
-<h2>Doctor Login</h2>
+<div id="login" class="page hidden">
+<h2>👨‍⚕️ Doctor Login</h2>
 
-<input id="user" placeholder="Username"><br>
-<input id="pass" type="password" placeholder="Password"><br>
+<input id="user" placeholder="Username">
+<input id="pass" type="password" placeholder="Password">
 
 <button onclick="login()">Login</button>
-<button onclick="goHome()">Back</button>
+<button onclick="goHome()">⬅ Back</button>
 </div>
 
 <!-- DASHBOARD -->
-<div id="dashboard" style="display:none;">
-<h2>Doctor Dashboard</h2>
+<div id="dashboard" class="page hidden">
+<h2>👨‍⚕️ Dashboard</h2>
 <div id="dashContent"></div>
 <button onclick="goHome()">Logout</button>
 </div>
 
 <!-- REPORT -->
-<div id="report" style="display:none;">
-<h2>Prescription</h2>
+<div id="report" class="page hidden">
 
-<div id="reportBox" style="
-background:white;
-color:black;
-padding:20px;
-border-radius:10px;
-max-width:400px;
-">
+<h2>🧾 Prescription</h2>
 
-<div style="text-align:center;border-bottom:2px solid black;">
+<div id="reportBox">
+
+<div style="text-align:center;border-bottom:2px solid black;margin-bottom:10px;">
 <h3>🏥 Kalpana Skin Clinic</h3>
 <p>Dr. Mrs. Kalpana Bharath</p>
 </div>
@@ -75,33 +187,23 @@ max-width:400px;
 
 </div>
 
-<button onclick="downloadPDF()">Download PDF</button>
+<button onclick="downloadPDF()">📄 Download PDF</button>
 <button onclick="goHome()">Done</button>
+
 </div>
 
 <script>
 
-/* NAVIGATION */
-function goHome(){
-show("home");
-}
-
-function goPatient(){
-show("patient");
-}
-
-function goDoctor(){
-show("login");
-}
+/* NAV */
+function goHome(){show("home");}
+function goPatient(){show("patient");}
+function goDoctor(){show("login");}
 
 function show(page){
-document.getElementById("home").style.display="none";
-document.getElementById("patient").style.display="none";
-document.getElementById("login").style.display="none";
-document.getElementById("dashboard").style.display="none";
-document.getElementById("report").style.display="none";
-
-document.getElementById(page).style.display="block";
+["home","patient","login","dashboard","report"].forEach(id=>{
+document.getElementById(id).classList.add("hidden");
+});
+document.getElementById(page).classList.remove("hidden");
 }
 
 /* ANALYZE */
@@ -117,23 +219,19 @@ if(!name){alert("Enter name");return;}
 
 let disease="General";
 if(symptoms.includes("pimple")) disease="Acne";
-if(symptoms.includes("ring")) disease="Fungal";
+if(symptoms.includes("ring")) disease="Fungal Infection";
 if(symptoms.includes("itch")) disease="Eczema";
 
 /* SAVE */
 let data=JSON.parse(localStorage.getItem("patients")||"[]");
 data.push({
-name:name,
-age:age,
-severity:severity,
-disease:disease,
-date:new Date().toLocaleDateString()
+name,age,severity,disease,date:new Date().toLocaleDateString()
 });
 localStorage.setItem("patients",JSON.stringify(data));
 
 /* REPORT */
 document.getElementById("reportData").innerHTML=`
-<p><b>Patient Name:</b> ${name}</p>
+<p><b>Patient:</b> ${name}</p>
 <p><b>Age:</b> ${age}</p>
 <p><b>Condition:</b> ${disease}</p>
 
@@ -141,9 +239,9 @@ document.getElementById("reportData").innerHTML=`
 
 <p><b>Advice:</b> Maintain hygiene</p>
 <p><b>Precautions:</b> Avoid touching infected area</p>
-<p><b>Recovery Time:</b> 1-2 weeks</p>
+<p><b>Recovery:</b> 1-2 weeks</p>
 
-<p style="color:red;">⚠ This is not a medical diagnosis</p>
+<p style="color:red;">⚠ Not a medical diagnosis</p>
 `;
 
 show("report");
@@ -151,10 +249,7 @@ show("report");
 
 /* LOGIN */
 function login(){
-let u=document.getElementById("user").value;
-let p=document.getElementById("pass").value;
-
-if(u==="Kalpana" && p==="Project"){
+if(user.value==="Kalpana" && pass.value==="Project"){
 loadDashboard();
 }else{
 alert("Wrong login");
@@ -165,15 +260,30 @@ alert("Wrong login");
 function loadDashboard(){
 
 let data=JSON.parse(localStorage.getItem("patients")||"[]");
-
 let today=new Date().toLocaleDateString();
 
 let todayList=data.filter(p=>p.date===today);
 
-let html="Total Today: "+todayList.length+"<br><br>";
+let severityCount={low:0,medium:0,high:0};
 
 todayList.forEach(p=>{
-html+=p.name+" - "+p.disease+"<br>";
+severityCount[p.severity]++;
+});
+
+let html=`
+<p><b>Total Patients Today:</b> ${todayList.length}</p>
+
+<p>
+Low: ${severityCount.low} <br>
+Medium: ${severityCount.medium} <br>
+High: ${severityCount.high}
+</p>
+
+<h4>Recent Patients</h4>
+`;
+
+todayList.slice(-5).reverse().forEach(p=>{
+html+=`<div class="card">${p.name} (${p.age}) - ${p.disease}</div>`;
 });
 
 document.getElementById("dashContent").innerHTML=html;
@@ -181,9 +291,9 @@ document.getElementById("dashContent").innerHTML=html;
 show("dashboard");
 }
 
+/* PDF */
 function downloadPDF(){
-let element=document.getElementById("reportBox");
-html2pdf().from(element).save("Prescription.pdf");
+html2pdf().from(document.getElementById("reportBox")).save("Prescription.pdf");
 }
 
 </script>
