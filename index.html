@@ -2,201 +2,308 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Kalpana Skin Clinic</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <title>Kalpana Skin Clinic | Expert Dermatological Care</title>
+    <script src="https://cloudflare.com"></script>
     <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb);
-            color: white;
-            min-height: 100vh;
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
         }
-        .page {
-            max-width: 500px;
-            margin: 20px auto;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            animation: fade 0.4s ease-out;
+
+        * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        body { margin: 0; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+        /* Professional Layouts */
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .active { display: block; }
+
+        /* Professional Cards */
+        .card { background: var(--card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
+        .hero { text-align: center; padding: 60px 20px; }
+
+        /* Buttons & Forms */
+        .btn-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
+        button { 
+            padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; 
+            font-weight: 600; transition: all 0.2s; font-size: 1rem;
         }
-        h2, h3 { text-align: center; margin-top: 0; }
-        input, select {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: white;
-            color: #333;
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        button:hover { transform: translateY(-1px); opacity: 0.9; }
+
+        input, select, textarea {
+            width: 100%; padding: 12px; margin: 10px 0 20px 0; border: 1px solid #cbd5e1;
+            border-radius: 8px; font-size: 1rem; outline-color: var(--primary);
         }
-        button {
-            width: 100%;
-            padding: 14px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(90deg, #38bdf8, #06b6d4);
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+
+        /* Dashboard Components */
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; border-left: 4px solid var(--primary); text-align: center; }
+        .stat-val { font-size: 2rem; font-weight: 800; color: var(--primary); }
+        
+        /* Modal Style */
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000;
         }
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4); }
-        button.secondary { background: rgba(255,255,255,0.2); margin-top: 5px; }
-        .row { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
-        .symptoms label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255,255,255,0.1);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-        }
-        .card { background: white; color: #1e293b; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 5px solid #38bdf8; }
-        #reportBox { background: white; color: black; padding: 30px; border-radius: 12px; }
-        @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .hidden { display: none; }
+        .modal-content { background: white; width: 90%; max-width: 600px; border-radius: 15px; padding: 0; overflow: hidden; position: relative; }
+        .modal-body { padding: 30px; }
+        .modal-footer { padding: 15px; background: #f1f5f9; text-align: right; }
+
+        /* Prescription Formatting */
+        .rx-header { border-bottom: 2px solid #333; margin-bottom: 20px; padding-bottom: 10px; }
+        .rx-body { min-height: 300px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div id="home" class="page">
-    <h2>🏥 Kalpana Skin Clinic</h2>
-    <button onclick="show('patient')">👤 Patient Entry</button>
-    <button onclick="show('login')" class="secondary">👨‍⚕️ Doctor Login</button>
-</div>
-
-<div id="patient" class="page hidden">
-    <h2>🧠 Patient Form</h2>
-    <input id="name" type="text" placeholder="Full Name">
-    <div class="row">
-        <input id="age" type="number" placeholder="Age">
-        <select id="severity">
-            <option value="low">Low Priority</option>
-            <option value="medium">Medium</option>
-            <option value="high">Urgent</option>
-        </select>
-    </div>
-    <h3>🩺 Symptoms</h3>
-    <div class="symptoms">
-        <label>Itching <input type="checkbox" value="itch"></label>
-        <label>Pimples <input type="checkbox" value="pimple"></label>
-        <label>Ring Patch <input type="checkbox" value="ring"></label>
-        <label>Dry Skin <input type="checkbox" value="dry"></label>
-    </div>
-    <button onclick="analyze()">🔍 Generate Prescription</button>
-    <button onclick="show('home')" class="secondary">⬅ Back</button>
-</div>
-
-<div id="login" class="page hidden">
-    <h2>👨‍⚕️ Doctor Login</h2>
-    <input id="user" type="text" placeholder="Username">
-    <input id="pass" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <button onclick="show('home')" class="secondary">⬅ Back</button>
-</div>
-
-<div id="dashboard" class="page hidden">
-    <h2>👨‍⚕️ Clinic Dashboard</h2>
-    <div id="dashContent"></div>
-    <button onclick="show('home')" class="secondary">Logout</button>
-</div>
-
-<div id="report" class="page hidden">
-    <div id="reportBox">
-        <div style="text-align:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:15px;">
-            <h2 style="margin:0;">Kalpana Skin Clinic</h2>
-            <small>Dr. Mrs. Kalpana Bharath | Dermatologist</small>
+<div class="container">
+    <!-- SCREEN 1: LANDING -->
+    <div id="screen-home" class="page active hero">
+        <h1 style="color:var(--primary)">🏥 Kalpana Skin Clinic</h1>
+        <p>Expert Dermatological Care by Dr. Mrs. Kalpana Bharath</p>
+        <div class="btn-group">
+            <button class="btn-primary" onclick="navigateTo('screen-patient')">I am a Patient</button>
+            <button class="btn-outline" onclick="navigateTo('screen-login')">I am a Doctor</button>
         </div>
-        <div id="reportData"></div>
     </div>
-    <button onclick="downloadPDF()">📄 Download PDF</button>
-    <button onclick="resetAndHome()" class="secondary">Done</button>
+
+    <!-- SCREEN 2: PATIENT FORM -->
+    <div id="screen-patient" class="page">
+        <div class="card" style="max-width: 600px; margin: auto;">
+            <h2>Patient Registration</h2>
+            <label>Full Name</label>
+            <input type="text" id="p-name" placeholder="Enter your name">
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <label>Age</label>
+                    <input type="number" id="p-age" placeholder="Age">
+                </div>
+                <div>
+                    <label>Severity</label>
+                    <select id="p-severity">
+                        <option value="Low">Low (General Checkup)</option>
+                        <option value="Medium">Medium (Active Symptoms)</option>
+                        <option value="High">High (Urgent/Painful)</option>
+                    </select>
+                </div>
+            </div>
+
+            <label>Primary Symptoms</label>
+            <select id="p-symptom">
+                <option value="General">Select Primary Issue...</option>
+                <option value="Acne">Persistent Pimples/Acne</option>
+                <option value="Fungal">Red Rings/Itchy Patches</option>
+                <option value="Eczema">Dry/Cracked Skin</option>
+            </select>
+
+            <button class="btn-primary" style="width:100%" onclick="processPatient()">Find Diagnosis & Prescription</button>
+            <button class="btn-outline" style="width:100%; margin-top: 10px;" onclick="navigateTo('screen-home')">Back</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: DOCTOR LOGIN -->
+    <div id="screen-login" class="page">
+        <div class="card" style="max-width: 400px; margin: auto; text-align: center;">
+            <h2>Doctor Secure Login</h2>
+            <input type="text" id="login-user" placeholder="Username">
+            <input type="password" id="login-pass" placeholder="Password">
+            <button class="btn-primary" style="width:100%" onclick="handleLogin()">Login to Dashboard</button>
+            <button class="btn-outline" style="width:100%; margin-top: 10px;" onclick="navigateTo('screen-home')">Back</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 4: DOCTOR DASHBOARD -->
+    <div id="screen-dashboard" class="page">
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>👨‍⚕️ Clinic Dashboard</h2>
+            <button class="btn-outline" onclick="logout()">Logout</button>
+        </div>
+
+        <div class="stat-grid" id="stats-container">
+            <!-- Stats injected here -->
+        </div>
+
+        <div class="card">
+            <h3>Recent Patients</h3>
+            <table style="width:100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #e2e8f0;">
+                        <th style="padding: 12px;">Name</th>
+                        <th>Condition</th>
+                        <th>Severity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="patient-list">
+                    <!-- List injected here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: PRESCRIPTION -->
+<div id="modal-rx" class="modal-overlay">
+    <div class="modal-content">
+        <div id="rx-print-area" class="modal-body" style="color: #000;">
+            <div class="rx-header">
+                <h2 style="margin:0; color: #2563eb;">KALPANA SKIN CLINIC</h2>
+                <p style="margin:0; font-weight: bold;">Dr. Mrs. Kalpana Bharath</p>
+                <p style="margin:0; font-size: 0.8rem; color: #64748b;">MBBS, MD - Dermatology | Reg No: 12345</p>
+            </div>
+            <div id="rx-content" class="rx-body"></div>
+            <div style="margin-top: 40px; border-top: 1px dashed #ccc; padding-top: 10px; font-size: 0.8rem;">
+                <p>Digital Signature: <i>K. Bharath</i></p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="downloadPrescription()">Download PDF</button>
+            <button class="btn-outline" onclick="closeModals()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: PATIENT DETAILS -->
+<div id="modal-details" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-body" id="detail-content"></div>
+        <div class="modal-footer">
+            <button class="btn-outline" onclick="closeModals()">Close</button>
+        </div>
+    </div>
 </div>
 
 <script>
-    const show = (id) => {
-        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-        document.getElementById(id).classList.remove('hidden');
-    };
-
-    function analyze() {
-        const name = document.getElementById("name").value.trim();
-        const age = document.getElementById("age").value;
-        const severity = document.getElementById("severity").value;
-        const symptoms = [...document.querySelectorAll("input[type=checkbox]:checked")].map(x => x.value);
-
-        if (!name || !age) return alert("Please fill in Name and Age");
-
-        let disease = "General Consultation";
-        if (symptoms.includes("ring")) disease = "Fungal Infection (Tinea)";
-        else if (symptoms.includes("pimple")) disease = "Acne Vulgaris";
-        else if (symptoms.includes("itch")) disease = "Eczema / Dermatitis";
-
-        // Save Data
-        const patients = JSON.parse(localStorage.getItem("patients") || "[]");
-        patients.push({ name, age, severity, disease, date: new Date().toLocaleDateString() });
-        localStorage.setItem("patients", JSON.stringify(patients));
-
-        // Display Report
-        document.getElementById("reportData").innerHTML = `
-            <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
-            <p><strong>Patient Name:</strong> ${name} (${age} yrs)</p>
-            <p><strong>Diagnosis:</strong> ${disease}</p>
-            <hr>
-            <p><strong>General Advice:</strong><br>• Keep the affected area clean and dry.<br>• Avoid sharing towels or personal items.</p>
-            <p style="color: #666; font-size: 0.8em; margin-top:20px;">* This is an automated summary. Please consult a doctor for a formal diagnosis.</p>
-        `;
-        show("report");
+    // Navigation Control
+    function navigateTo(screenId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
     }
 
-    function login() {
-        const u = document.getElementById("user").value;
-        const p = document.getElementById("pass").value;
-        if (u === "Kalpana" && p === "Project") loadDashboard();
-        else alert("Invalid Credentials");
+    // Patient Logic
+    function processPatient() {
+        const name = document.getElementById('p-name').value;
+        const age = document.getElementById('p-age').value;
+        const severity = document.getElementById('p-severity').value;
+        const symptom = document.getElementById('p-symptom').value;
+
+        if(!name || !age) { alert("Please fill your details"); return; }
+
+        const diagnosisMap = {
+            "Acne": "Acne Vulgaris",
+            "Fungal": "Tinea Corporis (Fungal)",
+            "Eczema": "Atopic Dermatitis",
+            "General": "General Skin Consultation"
+        };
+
+        const diagnosis = diagnosisMap[symptom];
+        const date = new Date().toLocaleDateString();
+
+        // Save to "Database"
+        const patients = JSON.parse(localStorage.getItem('clinic_db') || '[]');
+        const newEntry = { name, age, severity, symptom, diagnosis, date, id: Date.now() };
+        patients.push(newEntry);
+        localStorage.setItem('clinic_db', JSON.stringify(patients));
+
+        // Generate Rx Content
+        document.getElementById('rx-content').innerHTML = `
+            <p><b>Date:</b> ${date}</p>
+            <p><b>Patient:</b> ${name} (${age} years)</p>
+            <p><b>Diagnosis:</b> ${diagnosis}</p>
+            <hr>
+            <h3>Prescription / Advice:</h3>
+            <ul>
+                <li>Maintain strict hygiene in the affected area.</li>
+                <li>Avoid scrubbing or using harsh soaps.</li>
+                <li>Apply prescribed topical ointment twice daily.</li>
+                <li>Schedule a follow-up if symptoms persist beyond 7 days.</li>
+            </ul>
+        `;
+        document.getElementById('modal-rx').style.display = 'flex';
+    }
+
+    // Doctor Logic
+    function handleLogin() {
+        const u = document.getElementById('login-user').value;
+        const p = document.getElementById('login-pass').value;
+        if(u === "Kalpana" && p === "Project") {
+            loadDashboard();
+            navigateTo('screen-dashboard');
+        } else {
+            alert("Unauthorized Access");
+        }
     }
 
     function loadDashboard() {
-        const data = JSON.parse(localStorage.getItem("patients") || "[]");
+        const data = JSON.parse(localStorage.getItem('clinic_db') || '[]');
         const today = new Date().toLocaleDateString();
-        const todayList = data.filter(p => p.date === today);
+        const todayData = data.filter(p => p.date === today);
 
-        let html = `<h3>Today's Overview</h3>
-                    <p>Total Patients: <strong>${todayList.length}</strong></p>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                        <span>🟢 Low: ${todayList.filter(p=>p.severity==='low').length}</span>
-                        <span>🟡 Med: ${todayList.filter(p=>p.severity==='medium').length}</span>
-                        <span>🔴 High: ${todayList.filter(p=>p.severity==='high').length}</span>
-                    </div>`;
+        // Stats
+        const sevCount = { Low: 0, Medium: 0, High: 0 };
+        todayData.forEach(p => sevCount[p.severity]++);
 
-        todayList.reverse().forEach(p => {
-            html += `<div class="card"><strong>${p.name}</strong> - ${p.disease}<br><small>Priority: ${p.severity.toUpperCase()}</small></div>`;
+        document.getElementById('stats-container').innerHTML = `
+            <div class="stat-card"><div class="stat-val">${todayData.length}</div>Total Today</div>
+            <div class="stat-card" style="border-color:var(--success)"><div class="stat-val">${sevCount.Low}</div>Low Priority</div>
+            <div class="stat-card" style="border-color:orange"><div class="stat-val">${sevCount.Medium}</div>Medium Priority</div>
+            <div class="stat-card" style="border-color:var(--danger)"><div class="stat-val">${sevCount.High}</div>High Priority</div>
+        `;
+
+        // List
+        const top5 = data.slice(-5).reverse();
+        let listHtml = "";
+        top5.forEach(p => {
+            listHtml += `
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 12px;">${p.name}</td>
+                    <td>${p.diagnosis}</td>
+                    <td><span style="color:${p.severity==='High'?'red':'inherit'}">${p.severity}</span></td>
+                    <td><button onclick="showDetails(${p.id})">View Details</button></td>
+                </tr>
+            `;
         });
-        
-        document.getElementById("dashContent").innerHTML = html || "<p>No patients recorded today.</p>";
-        show("dashboard");
+        document.getElementById('patient-list').innerHTML = listHtml || "<tr><td colspan='4'>No records found</td></tr>";
     }
 
-    function resetAndHome() {
-        document.getElementById("name").value = "";
-        document.getElementById("age").value = "";
-        document.querySelectorAll("input[type=checkbox]").forEach(x => x.checked = false);
-        show("home");
+    function showDetails(id) {
+        const data = JSON.parse(localStorage.getItem('clinic_db') || '[]');
+        const p = data.find(item => item.id === id);
+        document.getElementById('detail-content').innerHTML = `
+            <h2 style="color:var(--primary)">Patient Profile</h2>
+            <p><b>Name:</b> ${p.name}</p>
+            <p><b>Age:</b> ${p.age}</p>
+            <p><b>Severity:</b> ${p.severity}</p>
+            <p><b>Initial Symptom:</b> ${p.symptom}</p>
+            <p><b>Diagnosis:</b> ${p.diagnosis}</p>
+            <p><b>Visited On:</b> ${p.date}</p>
+        `;
+        document.getElementById('modal-details').style.display = 'flex';
     }
 
-    function downloadPDF() {
-        const element = document.getElementById('reportBox');
-        const opt = { margin: 1, filename: 'Prescription.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
-        html2pdf().set(opt).from(element).save();
+    function closeModals() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+    }
+
+    function downloadPrescription() {
+        const element = document.getElementById('rx-print-area');
+        html2pdf().from(element).save('Prescription_KalpanaSkinClinic.pdf');
+    }
+
+    function logout() {
+        navigateTo('screen-home');
+        document.getElementById('login-pass').value = "";
     }
 </script>
 
