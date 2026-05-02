@@ -1,301 +1,203 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Kalpana Skin Clinic</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- PDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-<style>
-
-/* 🌌 BACKGROUND */
-body{
-font-family:'Segoe UI',sans-serif;
-margin:0;
-padding:20px;
-background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
-color:white;
-}
-
-/* 🏥 CARD */
-.page{
-max-width:500px;
-margin:auto;
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(12px);
-padding:25px;
-border-radius:15px;
-box-shadow:0 10px 30px rgba(0,0,0,0.4);
-animation:fade 0.4s ease;
-}
-
-/* 🧾 HEADINGS */
-h2{
-text-align:center;
-margin-bottom:15px;
-}
-
-/* 📥 INPUT */
-input,select{
-width:100%;
-padding:12px;
-margin:8px 0;
-border-radius:10px;
-border:none;
-outline:none;
-}
-
-/* 🔘 BUTTON */
-button{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:10px;
-background:linear-gradient(90deg,#38bdf8,#06b6d4);
-color:white;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
-}
-button:hover{
-transform:scale(1.03);
-box-shadow:0 0 10px #38bdf8;
-}
-
-/* GRID */
-.row{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-}
-
-/* SYMPTOMS */
-.symptoms{
-margin-top:10px;
-}
-.symptoms label{
-display:flex;
-justify-content:space-between;
-background:rgba(255,255,255,0.1);
-padding:10px;
-border-radius:10px;
-margin-bottom:5px;
-}
-
-/* DASHBOARD */
-.card{
-background:white;
-color:black;
-padding:10px;
-border-radius:10px;
-margin:8px 0;
-}
-
-/* REPORT */
-#reportBox{
-background:white;
-color:black;
-padding:20px;
-border-radius:12px;
-}
-
-/* ANIMATION */
-@keyframes fade{
-from{opacity:0;transform:translateY(10px);}
-to{opacity:1;}
-}
-
-/* HIDE */
-.hidden{display:none;}
-
-</style>
+    <meta charset="UTF-8">
+    <title>Kalpana Skin Clinic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb);
+            color: white;
+            min-height: 100vh;
+        }
+        .page {
+            max-width: 500px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fade 0.4s ease-out;
+        }
+        h2, h3 { text-align: center; margin-top: 0; }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: white;
+            color: #333;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #38bdf8, #06b6d4);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4); }
+        button.secondary { background: rgba(255,255,255,0.2); margin-top: 5px; }
+        .row { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
+        .symptoms label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .card { background: white; color: #1e293b; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 5px solid #38bdf8; }
+        #reportBox { background: white; color: black; padding: 30px; border-radius: 12px; }
+        @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden { display: none; }
+    </style>
 </head>
-
 <body>
 
-<!-- HOME -->
 <div id="home" class="page">
-<h2>🏥 Kalpana Skin Clinic</h2>
-<button onclick="goPatient()">👤 Patient</button>
-<button onclick="goDoctor()">👨‍⚕️ Doctor</button>
+    <h2>🏥 Kalpana Skin Clinic</h2>
+    <button onclick="show('patient')">👤 Patient Entry</button>
+    <button onclick="show('login')" class="secondary">👨‍⚕️ Doctor Login</button>
 </div>
 
-<!-- PATIENT -->
 <div id="patient" class="page hidden">
-
-<h2>🧠 Patient Form</h2>
-
-<input id="name" placeholder="👤 Name">
-
-<div class="row">
-<input id="age" placeholder="🎂 Age">
-
-<select id="severity">
-<option value="low">Low</option>
-<option value="medium">Medium</option>
-<option value="high">High</option>
-</select>
+    <h2>🧠 Patient Form</h2>
+    <input id="name" type="text" placeholder="Full Name">
+    <div class="row">
+        <input id="age" type="number" placeholder="Age">
+        <select id="severity">
+            <option value="low">Low Priority</option>
+            <option value="medium">Medium</option>
+            <option value="high">Urgent</option>
+        </select>
+    </div>
+    <h3>🩺 Symptoms</h3>
+    <div class="symptoms">
+        <label>Itching <input type="checkbox" value="itch"></label>
+        <label>Pimples <input type="checkbox" value="pimple"></label>
+        <label>Ring Patch <input type="checkbox" value="ring"></label>
+        <label>Dry Skin <input type="checkbox" value="dry"></label>
+    </div>
+    <button onclick="analyze()">🔍 Generate Prescription</button>
+    <button onclick="show('home')" class="secondary">⬅ Back</button>
 </div>
 
-<h3>🩺 Symptoms</h3>
-
-<div class="symptoms">
-<label>Itching <input type="checkbox" value="itch"></label>
-<label>Pimples <input type="checkbox" value="pimple"></label>
-<label>Ring Patch <input type="checkbox" value="ring"></label>
-<label>Dry Skin <input type="checkbox" value="dry"></label>
-</div>
-
-<button onclick="analyze()">🔍 Analyze</button>
-<button onclick="goHome()">⬅ Back</button>
-
-</div>
-
-<!-- LOGIN -->
 <div id="login" class="page hidden">
-<h2>👨‍⚕️ Doctor Login</h2>
-
-<input id="user" placeholder="Username">
-<input id="pass" type="password" placeholder="Password">
-
-<button onclick="login()">Login</button>
-<button onclick="goHome()">⬅ Back</button>
+    <h2>👨‍⚕️ Doctor Login</h2>
+    <input id="user" type="text" placeholder="Username">
+    <input id="pass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <button onclick="show('home')" class="secondary">⬅ Back</button>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard" class="page hidden">
-<h2>👨‍⚕️ Dashboard</h2>
-<div id="dashContent"></div>
-<button onclick="goHome()">Logout</button>
+    <h2>👨‍⚕️ Clinic Dashboard</h2>
+    <div id="dashContent"></div>
+    <button onclick="show('home')" class="secondary">Logout</button>
 </div>
 
-<!-- REPORT -->
 <div id="report" class="page hidden">
-
-<h2>🧾 Prescription</h2>
-
-<div id="reportBox">
-
-<div style="text-align:center;border-bottom:2px solid black;margin-bottom:10px;">
-<h3>🏥 Kalpana Skin Clinic</h3>
-<p>Dr. Mrs. Kalpana Bharath</p>
-</div>
-
-<div id="reportData"></div>
-
-</div>
-
-<button onclick="downloadPDF()">📄 Download PDF</button>
-<button onclick="goHome()">Done</button>
-
+    <div id="reportBox">
+        <div style="text-align:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:15px;">
+            <h2 style="margin:0;">Kalpana Skin Clinic</h2>
+            <small>Dr. Mrs. Kalpana Bharath | Dermatologist</small>
+        </div>
+        <div id="reportData"></div>
+    </div>
+    <button onclick="downloadPDF()">📄 Download PDF</button>
+    <button onclick="resetAndHome()" class="secondary">Done</button>
 </div>
 
 <script>
+    const show = (id) => {
+        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+    };
 
-/* NAV */
-function goHome(){show("home");}
-function goPatient(){show("patient");}
-function goDoctor(){show("login");}
+    function analyze() {
+        const name = document.getElementById("name").value.trim();
+        const age = document.getElementById("age").value;
+        const severity = document.getElementById("severity").value;
+        const symptoms = [...document.querySelectorAll("input[type=checkbox]:checked")].map(x => x.value);
 
-function show(page){
-["home","patient","login","dashboard","report"].forEach(id=>{
-document.getElementById(id).classList.add("hidden");
-});
-document.getElementById(page).classList.remove("hidden");
-}
+        if (!name || !age) return alert("Please fill in Name and Age");
 
-/* ANALYZE */
-function analyze(){
+        let disease = "General Consultation";
+        if (symptoms.includes("ring")) disease = "Fungal Infection (Tinea)";
+        else if (symptoms.includes("pimple")) disease = "Acne Vulgaris";
+        else if (symptoms.includes("itch")) disease = "Eczema / Dermatitis";
 
-let name=document.getElementById("name").value;
-let age=document.getElementById("age").value;
-let severity=document.getElementById("severity").value;
+        // Save Data
+        const patients = JSON.parse(localStorage.getItem("patients") || "[]");
+        patients.push({ name, age, severity, disease, date: new Date().toLocaleDateString() });
+        localStorage.setItem("patients", JSON.stringify(patients));
 
-let symptoms=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value);
+        // Display Report
+        document.getElementById("reportData").innerHTML = `
+            <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+            <p><strong>Patient Name:</strong> ${name} (${age} yrs)</p>
+            <p><strong>Diagnosis:</strong> ${disease}</p>
+            <hr>
+            <p><strong>General Advice:</strong><br>• Keep the affected area clean and dry.<br>• Avoid sharing towels or personal items.</p>
+            <p style="color: #666; font-size: 0.8em; margin-top:20px;">* This is an automated summary. Please consult a doctor for a formal diagnosis.</p>
+        `;
+        show("report");
+    }
 
-if(!name){alert("Enter name");return;}
+    function login() {
+        const u = document.getElementById("user").value;
+        const p = document.getElementById("pass").value;
+        if (u === "Kalpana" && p === "Project") loadDashboard();
+        else alert("Invalid Credentials");
+    }
 
-let disease="General";
-if(symptoms.includes("pimple")) disease="Acne";
-if(symptoms.includes("ring")) disease="Fungal Infection";
-if(symptoms.includes("itch")) disease="Eczema";
+    function loadDashboard() {
+        const data = JSON.parse(localStorage.getItem("patients") || "[]");
+        const today = new Date().toLocaleDateString();
+        const todayList = data.filter(p => p.date === today);
 
-/* SAVE */
-let data=JSON.parse(localStorage.getItem("patients")||"[]");
-data.push({
-name,age,severity,disease,date:new Date().toLocaleDateString()
-});
-localStorage.setItem("patients",JSON.stringify(data));
+        let html = `<h3>Today's Overview</h3>
+                    <p>Total Patients: <strong>${todayList.length}</strong></p>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                        <span>🟢 Low: ${todayList.filter(p=>p.severity==='low').length}</span>
+                        <span>🟡 Med: ${todayList.filter(p=>p.severity==='medium').length}</span>
+                        <span>🔴 High: ${todayList.filter(p=>p.severity==='high').length}</span>
+                    </div>`;
 
-/* REPORT */
-document.getElementById("reportData").innerHTML=`
-<p><b>Patient:</b> ${name}</p>
-<p><b>Age:</b> ${age}</p>
-<p><b>Condition:</b> ${disease}</p>
+        todayList.reverse().forEach(p => {
+            html += `<div class="card"><strong>${p.name}</strong> - ${p.disease}<br><small>Priority: ${p.severity.toUpperCase()}</small></div>`;
+        });
+        
+        document.getElementById("dashContent").innerHTML = html || "<p>No patients recorded today.</p>";
+        show("dashboard");
+    }
 
-<hr>
+    function resetAndHome() {
+        document.getElementById("name").value = "";
+        document.getElementById("age").value = "";
+        document.querySelectorAll("input[type=checkbox]").forEach(x => x.checked = false);
+        show("home");
+    }
 
-<p><b>Advice:</b> Maintain hygiene</p>
-<p><b>Precautions:</b> Avoid touching infected area</p>
-<p><b>Recovery:</b> 1-2 weeks</p>
-
-<p style="color:red;">⚠ Not a medical diagnosis</p>
-`;
-
-show("report");
-}
-
-/* LOGIN */
-function login(){
-if(user.value==="Kalpana" && pass.value==="Project"){
-loadDashboard();
-}else{
-alert("Wrong login");
-}
-}
-
-/* DASHBOARD */
-function loadDashboard(){
-
-let data=JSON.parse(localStorage.getItem("patients")||"[]");
-let today=new Date().toLocaleDateString();
-
-let todayList=data.filter(p=>p.date===today);
-
-let severityCount={low:0,medium:0,high:0};
-
-todayList.forEach(p=>{
-severityCount[p.severity]++;
-});
-
-let html=`
-<p><b>Total Patients Today:</b> ${todayList.length}</p>
-
-<p>
-Low: ${severityCount.low} <br>
-Medium: ${severityCount.medium} <br>
-High: ${severityCount.high}
-</p>
-
-<h4>Recent Patients</h4>
-`;
-
-todayList.slice(-5).reverse().forEach(p=>{
-html+=`<div class="card">${p.name} (${p.age}) - ${p.disease}</div>`;
-});
-
-document.getElementById("dashContent").innerHTML=html;
-
-show("dashboard");
-}
-
-/* PDF */
-function downloadPDF(){
-html2pdf().from(document.getElementById("reportBox")).save("Prescription.pdf");
-}
-
+    function downloadPDF() {
+        const element = document.getElementById('reportBox');
+        const opt = { margin: 1, filename: 'Prescription.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
+        html2pdf().set(opt).from(element).save();
+    }
 </script>
 
 </body>
