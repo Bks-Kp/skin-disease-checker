@@ -3,6 +3,7 @@
 <head>
 <title>Skin Clinic</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
 <body>
@@ -56,7 +57,25 @@
 <!-- REPORT -->
 <div id="report" style="display:none;">
 <h2>Prescription</h2>
+
+<div id="reportBox" style="
+background:white;
+color:black;
+padding:20px;
+border-radius:10px;
+max-width:400px;
+">
+
+<div style="text-align:center;border-bottom:2px solid black;">
+<h3>🏥 Kalpana Skin Clinic</h3>
+<p>Dr. Mrs. Kalpana Bharath</p>
+</div>
+
 <div id="reportData"></div>
+
+</div>
+
+<button onclick="downloadPDF()">Download PDF</button>
 <button onclick="goHome()">Done</button>
 </div>
 
@@ -113,10 +132,19 @@ date:new Date().toLocaleDateString()
 localStorage.setItem("patients",JSON.stringify(data));
 
 /* REPORT */
-document.getElementById("reportData").innerHTML=
-"Name: "+name+"<br>"+
-"Age: "+age+"<br>"+
-"Disease: "+disease;
+document.getElementById("reportData").innerHTML=`
+<p><b>Patient Name:</b> ${name}</p>
+<p><b>Age:</b> ${age}</p>
+<p><b>Condition:</b> ${disease}</p>
+
+<hr>
+
+<p><b>Advice:</b> Maintain hygiene</p>
+<p><b>Precautions:</b> Avoid touching infected area</p>
+<p><b>Recovery Time:</b> 1-2 weeks</p>
+
+<p style="color:red;">⚠ This is not a medical diagnosis</p>
+`;
 
 show("report");
 }
@@ -151,6 +179,11 @@ html+=p.name+" - "+p.disease+"<br>";
 document.getElementById("dashContent").innerHTML=html;
 
 show("dashboard");
+}
+
+function downloadPDF(){
+let element=document.getElementById("reportBox");
+html2pdf().from(element).save("Prescription.pdf");
 }
 
 </script>
